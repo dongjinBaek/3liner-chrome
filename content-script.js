@@ -40,6 +40,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       // document.getElementById('ws-popup').style.top = `${e.clientY}px`;
       // document.getElementById('ws-popup').style.left = `${e.clientX + 5}px`;
 
+      const popupElement =  document.getElementById('ws-popup');
       const popupContent = document.getElementById('ws-popup-content');
       const titleElement = document.getElementById('ws-popup-title');
       try {
@@ -57,7 +58,6 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         const title = elem.querySelector(titleSelector).textContent;
         titleElement.textContent = title;
         // document.getElementById('ws-popup-save').style.display = 'inline-block';
-
         
         if (popupContent) {
           if (lines.length === 0) {
@@ -71,14 +71,78 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         popupContent.innerHTML = '내용을 불러오지 못했습니다';
         console.log(e);
       }
+
+      const removePopup = () => {
+        const old = document.getElementById('ws-popup');
+        if (old) {
+          old.remove();
+        }
+      }
+
+      const rect = document.getElementById('ws-popup').getBoundingClientRect();
+      console.log(rect);
+      let isMouseInLinkArea = true;
+
+      let count = -1, lastX = 0, lastY = 0;
+      
+      const isMouseHeading = (e, rect) => {
+        console.log(rect.top, e.clientY, rect.bottom);
+        console.log(rect.left, e.clientX)
+        count++;
+        if (rect.left <= e.clientX && e.clientX <= rect.right
+            && rect.top <= e.clientY && e.clientY <= rect.bottom) {
+              return true;
+        }
+        if (count === 0) {
+          lastX = e.clientX;
+          lastY = e.clientY;
+          return true;
+        }
+        if (count % 5 !== 0) {
+          return true;
+        }
+        const movementX = e.clientX - lastX;
+        const movementY = e.clientY - lastY;
+        // console.log(e.clientX, e.clientY, lastX, lastY)
+        lastX = e.clientX;
+        lastY = e.clientY;
+        if (movementX < 0) {
+          return false;
+        }
+
+        const topLeftSlope = (rect.top - e.clientY) / (rect.left - e.clientX);
+        const bottomLeftSlope = (rect.bottom - e.clientY) / (rect.left - e.clientX);
+        const headingSlope = movementY / movementX;
+        console.log(topLeftSlope, bottomLeftSlope, headingSlope);
+
+        return bottomLeftSlope > headingSlope && headingSlope > topLeftSlope;
+      }
+
+      const mouseMoveHandler = async (e) => {
+        console.log(e.movementX, e.movementY);
+        if (!isMouseInLinkArea && !isMouseHeading(e, rect)) {
+          console.log('not heading popup');
+          document.removeEventListener('mousemove', mouseMoveHandler);
+          const old = document.getElementById('ws-popup');
+          if (old) {
+            old.remove();
+          }
+        }
+      };
+
+      document.addEventListener('mousemove', mouseMoveHandler);
+
+      elem.addEventListener('mouseleave', async (e) => {
+        console.log('leave', e);
+        isMouseInLinkArea = false;
+      });
+
   });
 
-  elem.addEventListener('mouseleave', async (e) => {
-    console.log(e);
-    const old = document.getElementById('ws-popup');
-    if (old) {
-      old.remove();
-    }
-});
+  
+
+  
+
+  
   
 });
