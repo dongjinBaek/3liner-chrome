@@ -6,7 +6,7 @@
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "content_scripts": [
     {
-      "matches": ["https://media.naver.com/press/*"],
+      "matches": ["https://media.naver.com/press/*", "https://www.google.com/*", "https://www.google.co.kr/*"],
       "js": ["content-script.js"],
       "all_frames": true
     }
@@ -17,7 +17,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [ "popup.html" ],
+      "resources": [ "popup.html", "logo.png", "SCDream9.otf", "SCDream4.otf"],
       "matches": [ "<all_urls>" ]
     }
   ]
