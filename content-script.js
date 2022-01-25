@@ -29,10 +29,13 @@ linkSelector = linkSelectorDict[pageType];
 titleSelector = titleSelectorDict[pageType];
 
 document.querySelectorAll(linkSelector).forEach(elem => {
-  console.log(linkSelector, titleSelector);
   
     elem.addEventListener('mouseenter', async (e) => {
-      console.log(e);
+      const old = document.getElementById('ws-popup');
+      if (old) {
+        old.remove();
+      }
+
       const popup = await fetch(chrome.runtime.getURL('/popup.html'));
       const popupHtml = await popup.text();
       document.body.insertAdjacentHTML('beforeend', popupHtml);
