@@ -1,19 +1,24 @@
 {
-  "name": "ThreeLiner",
-  "description": "Make todolists by adding checkbox to web",
+  "name": "3Liner",
+  "description": "3 Liner",
   "version": "0.0.1",
   "manifest_version": 3,
+  "icons": {
+    "16": "logo128.png",
+    "48": "logo128.png",
+    "128": "logo128.png"
+  },
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "content_scripts": [
     {
-      "matches": ["https://media.naver.com/press/*", "https://www.google.com/*", "https://www.google.co.kr/*"],
+      "matches": ["https://media.naver.com/press/*", "https://news.naver.com/*", "https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*"],
       "js": ["content-script.js"],
       "all_frames": true
     }
   ],
-  "host_permissions": ["http://localhost:5000/*"],
+  "host_permissions": ["https://api.3-liner.com:5000/*"],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup-real.html"
   },
   "web_accessible_resources": [
     {

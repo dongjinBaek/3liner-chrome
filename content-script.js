@@ -10,12 +10,16 @@ styleNode.textContent   = "@font-face { font-family: SCDream9; src: url('"
 document.head.appendChild (styleNode);
 
 const linkSelectorDict = {
-  'google': '.jtfYYd a, a.WlydOe',
+  'google': '.jtfYYd a, a.WlydOe, a.srEl',
   'naverNews': '.newspaper_article_lst a',
+  'naverNewsMain': '.cjs_journal_wrap a, a.cluster_text_headline',
+  'naverSearch': 'a.link_tit, a.total_tit, a.news_tit, a.sub_tit, a.lnk_tit',
 };
 const titleSelectorDict = {
   'google': 'h3, .mCBkyc',
   'naverNews': 'strong',
+  'naverNewsMain': '.cjs_t',
+  'naverSearch': null,
 };
 
 let linkSelector = '', titleSelector = '', pageType = '';
@@ -23,6 +27,10 @@ if (document.URL.startsWith('https://www.google.com/search') || document.URL.sta
   pageType = 'google';
 } else if (document.URL.startsWith('https://media.naver.com/press/')) {
   pageType = 'naverNews';
+} else if (document.URL.startsWith('https://news.naver.com/')) {
+  pageType = 'naverNewsMain';
+} else if (document.URL.startsWith('https://search.naver.com/search.naver')) {
+  pageType = 'naverSearch';
 }
 
 linkSelector = linkSelectorDict[pageType];
@@ -49,16 +57,23 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       try {
         let lines = [];
 
-          const threeliner = await fetch(`https://api.3-liner.com:5000?url=${elem.href}`)
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 5000)
+
+          const threeliner = await fetch(`https://api.3-liner.com:5000?url=${elem.href}`, { signal: controller.signal });
+          clearTimeout(timeout);
+
           const res = await threeliner.text();
           const resJson = JSON.parse(res);
           lines = resJson.lines;
-          console.log(resJson);
         
         document.getElementById('ws-popup-icon').style.display = 'inline-block';
         document.getElementById('ws-popup-icon').src = chrome.runtime.getURL("logo.png");
         
-        const title = elem.querySelector(titleSelector).textContent;
+        let title = elem.textContent;
+        if (titleSelector) {
+          title = elem.querySelector(titleSelector).textContent;
+        }
         titleElement.textContent = title;
         // document.getElementById('ws-popup-save').style.display = 'inline-block';
         
@@ -72,6 +87,9 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       } catch (e) {
         titleElement.textContent = '';
         popupContent.innerHTML = '내용을 불러오지 못했습니다';
+        if (e.name === 'AbortError') {
+          popupContent.innerHTML = 'timeout';
+        }
         console.log(e);
       }
 
@@ -83,14 +101,11 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       }
 
       const rect = document.getElementById('ws-popup').getBoundingClientRect();
-      console.log(rect);
       let isMouseInLinkArea = true;
 
       let count = -1, lastX = 0, lastY = 0;
       
       const isMouseHeading = (e, rect) => {
-        console.log(rect.top, e.clientY, rect.bottom);
-        console.log(rect.left, e.clientX)
         count++;
         if (rect.left <= e.clientX && e.clientX <= rect.right
             && rect.top <= e.clientY && e.clientY <= rect.bottom) {
@@ -116,7 +131,6 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         const topLeftSlope = (rect.top - e.clientY) / (rect.left - e.clientX);
         const bottomLeftSlope = (rect.bottom - e.clientY) / (rect.left - e.clientX);
         const headingSlope = movementY / movementX;
-        console.log(topLeftSlope, bottomLeftSlope, headingSlope);
 
         return bottomLeftSlope > headingSlope && headingSlope > topLeftSlope;
       }
@@ -124,7 +138,6 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       const mouseMoveHandler = async (e) => {
         console.log(e.movementX, e.movementY);
         if (!isMouseInLinkArea && !isMouseHeading(e, rect)) {
-          console.log('not heading popup');
           document.removeEventListener('mousemove', mouseMoveHandler);
           const old = document.getElementById('ws-popup');
           if (old) {
