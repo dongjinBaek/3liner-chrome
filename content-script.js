@@ -6,6 +6,12 @@ styleNode.textContent   = "@font-face { font-family: SCDream9; src: url('"
                 + "@font-face { font-family: SCDream4; src: url('"
                 + chrome.runtime.getURL ("SCDream4.otf")
                 + "'); }"
+                + "@font-face { font-family: NanumSquare_B; src: url('"
+                + chrome.runtime.getURL ("NanumSquareOTF_acB.otf")
+                + "'); }"
+                + "@font-face { font-family: NanumSquare_R; src: url('"
+                + chrome.runtime.getURL ("NanumSquareOTF_acR.otf")
+                + "'); }"
                 ;
 document.head.appendChild (styleNode);
 
@@ -13,7 +19,7 @@ const linkSelectorDict = {
   'google': '.jtfYYd a, a.WlydOe, a.srEl',
   'naverNews': '.newspaper_article_lst a',
   'naverNewsMain': '.cjs_journal_wrap a, a.cluster_text_headline',
-  'naverSearch': 'a.link_tit, a.total_tit, a.news_tit, a.sub_tit, a.lnk_tit',
+  'naverSearch': 'a.link_tit, a.total_tit, a.news_tit, a.sub_tit, a.lnk_tit, a.link.elss, a.question_text',
 };
 const titleSelectorDict = {
   'google': 'h3, .mCBkyc',
@@ -60,7 +66,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         const controller = new AbortController()
         const timeout = setTimeout(() => controller.abort(), 5000)
 
-          const threeliner = await fetch(`https://api.3-liner.com:5000?url=${elem.href}`, { signal: controller.signal });
+          const threeliner = await fetch(`https://api.3-liner.com:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
           clearTimeout(timeout);
 
           const res = await threeliner.text();
