@@ -3,6 +3,10 @@
   src: url('/NanumSquareOTF_acB.otf');
 }
 
+button {
+  cursor: pointer;
+}
+
 #tl-textarea{
   border-radius: 10px;
   width:100%;
@@ -10,5 +14,23 @@
   resize:none;
   padding: 10px;
   box-sizing: border-box;
-  border-color: #656668;
+  border-color: #a9abad;
+}
+
+#tl-summarize-btn-container {
+  display:flex; 
+  justify-content:flex-end;
+  width: 100%; 
+  margin-top:5px;
+  font-family: NanumSquare_R;
+}
+
+#tl-summarize-btn {
+  border:none; 
+  padding:10px;
+  border-radius: 5px;
+  /* background-color: #3181ff; */
+  background-color: #e9e6ff;
+  color: #403294;
+  /* color: white; */
 }
