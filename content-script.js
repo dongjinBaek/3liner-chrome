@@ -41,7 +41,7 @@ titleSelector = titleSelectorDict[pageType];
 document.querySelectorAll(linkSelector).forEach(elem => {
   
     elem.addEventListener('mouseenter', async (e) => {
-      const old = document.getElementById('ws-popup');
+      const old = document.getElementById('tl-popup');
       if (old) {
         old.remove();
       }
@@ -50,12 +50,12 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       const popupHtml = await popup.text();
       document.body.insertAdjacentHTML('beforeend', popupHtml);
 
-      // document.getElementById('ws-popup').style.top = `${e.clientY}px`;
-      // document.getElementById('ws-popup').style.left = `${e.clientX + 5}px`;
+      // document.getElementById('tl-popup').style.top = `${e.clientY}px`;
+      // document.getElementById('tl-popup').style.left = `${e.clientX + 5}px`;
 
-      const popupElement =  document.getElementById('ws-popup');
-      const popupContent = document.getElementById('ws-popup-content');
-      const titleElement = document.getElementById('ws-popup-title');
+      const popupElement =  document.getElementById('tl-popup');
+      const popupContent = document.getElementById('tl-popup-content');
+      const titleElement = document.getElementById('tl-popup-title');
       try {
         let lines = [];
 
@@ -69,15 +69,15 @@ document.querySelectorAll(linkSelector).forEach(elem => {
           const resJson = JSON.parse(res);
           lines = resJson.lines;
         
-        document.getElementById('ws-popup-icon').style.display = 'inline-block';
-        document.getElementById('ws-popup-icon').src = chrome.runtime.getURL("logo.png");
+        document.getElementById('tl-popup-icon').style.display = 'inline-block';
+        document.getElementById('tl-popup-icon').src = chrome.runtime.getURL("logo.png");
         
         let title = elem.textContent;
         if (titleSelector) {
           title = elem.querySelector(titleSelector).textContent;
         }
         titleElement.textContent = title;
-        // document.getElementById('ws-popup-save').style.display = 'inline-block';
+        // document.getElementById('tl-popup-save').style.display = 'inline-block';
         
         if (popupContent) {
           if (lines.length === 0) {
@@ -96,13 +96,13 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       }
 
       const removePopup = () => {
-        const old = document.getElementById('ws-popup');
+        const old = document.getElementById('tl-popup');
         if (old) {
           old.remove();
         }
       }
 
-      const rect = document.getElementById('ws-popup').getBoundingClientRect();
+      const rect = document.getElementById('tl-popup').getBoundingClientRect();
       let isMouseInLinkArea = true;
 
       let count = -1, lastX = 0, lastY = 0;
@@ -141,7 +141,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         console.log(e.movementX, e.movementY);
         if (!isMouseInLinkArea && !isMouseHeading(e, rect)) {
           document.removeEventListener('mousemove', mouseMoveHandler);
-          const old = document.getElementById('ws-popup');
+          const old = document.getElementById('tl-popup');
           if (old) {
             old.remove();
           }
