@@ -11,18 +11,18 @@
   "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "content_scripts": [
     {
-      "matches": ["https://media.naver.com/press/*", "https://news.naver.com/*", "https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*"],
+      "matches": ["https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*"],
       "js": ["content-script.js"],
       "all_frames": true
     }
   ],
   "host_permissions": ["https://api.3-liner.com:5000/*"],
   "action": {
-    "default_popup": "popup-real.html"
+    "default_popup": "default-popup.html"
   },
   "web_accessible_resources": [
     {
-      "resources": [ "popup.html", "logo.png", "SCDream9.otf", "SCDream4.otf"],
+      "resources": [ "popup.html", "logo.png", "NanumSquareOTF_acB.otf", "NanumSquareOTF_acR.otf", "default-popup.css"],
       "matches": [ "<all_urls>" ]
     }
   ]

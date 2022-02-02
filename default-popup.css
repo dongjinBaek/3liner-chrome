@@ -1,0 +1,14 @@
+@font-face {
+  font-family: NanumSquare_B;
+  src: url('/NanumSquareOTF_acB.otf');
+}
+
+#tl-textarea{
+  border-radius: 10px;
+  width:100%;
+  height:150px;
+  resize:none;
+  padding: 10px;
+  box-sizing: border-box;
+  border-color: #656668;
+}

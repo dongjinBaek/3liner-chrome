@@ -31,10 +31,6 @@ const titleSelectorDict = {
 let linkSelector = '', titleSelector = '', pageType = '';
 if (document.URL.startsWith('https://www.google.com/search') || document.URL.startsWith('https://www.google.co.kr/search')) {
   pageType = 'google';
-} else if (document.URL.startsWith('https://media.naver.com/press/')) {
-  pageType = 'naverNews';
-} else if (document.URL.startsWith('https://news.naver.com/')) {
-  pageType = 'naverNewsMain';
 } else if (document.URL.startsWith('https://search.naver.com/search.naver')) {
   pageType = 'naverSearch';
 }
@@ -66,7 +62,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         const controller = new AbortController()
         const timeout = setTimeout(() => controller.abort(), 5000)
 
-          const threeliner = await fetch(`https://api.3-liner.com:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
+          const threeliner = await fetch(`http://localhost:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
           clearTimeout(timeout);
 
           const res = await threeliner.text();
@@ -161,10 +157,4 @@ document.querySelectorAll(linkSelector).forEach(elem => {
 
   });
 
-  
-
-  
-
-  
-  
 });
