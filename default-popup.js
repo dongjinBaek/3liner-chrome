@@ -3,8 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const summarizeText = async () => {
-  console.log('clicked')
   const textArea = document.getElementById('tl-textarea');
+  if (textArea.value.indexOf(' ') === -1) {
+    alert('두 단어 이상 입력해주세요');
+    return;
+  }
   try {
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 5000)
@@ -17,14 +20,16 @@ const summarizeText = async () => {
     const res = await threeliner.text();
     const resJson = JSON.parse(res);
     lines = resJson.lines;
-    console.log(lines);
 
-    document.getElementById('tl-textarea').value = lines.map(line => '- ' + line).join('\n\n');;
+    if (lines.length === 0) {
+      textArea.value = '요약을 불러오지 못했습니다';
+    } else {
+      textArea.value = lines.map(line => '- ' + line).join('\n\n');;
+    }
   } catch (e) {
-    cons
-    textArea.textContent = '내용을 불러오지 못했습니다';
+    textArea.value = '내용을 불러오지 못했습니다';
     if (e.name === 'AbortError') {
-      textArea.textContent = 'timeout';
+      textArea.value = '시간 내에 요약을 불러오지 못했습니다';
     }
     console.log(e);
   }

@@ -12,7 +12,7 @@
   "content_scripts": [
     {
       "matches": ["https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*"],
-      "js": ["content-script.js"],
+      "js": ["amplitude.js", "content-script.js"],
       "all_frames": true
     }
   ],

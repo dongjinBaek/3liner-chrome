@@ -1,12 +1,10 @@
+amplitude.getInstance().init("b864283ca45efdcb2c800fb109d6643f");
+
+
+
 const styleNode           = document.createElement ("style");
 styleNode.type          = "text/css";
-styleNode.textContent   = "@font-face { font-family: SCDream9; src: url('"
-                + chrome.runtime.getURL ("SCDream9.otf")
-                + "'); }"
-                + "@font-face { font-family: SCDream4; src: url('"
-                + chrome.runtime.getURL ("SCDream4.otf")
-                + "'); }"
-                + "@font-face { font-family: NanumSquare_B; src: url('"
+styleNode.textContent   = "@font-face { font-family: NanumSquare_B; src: url('"
                 + chrome.runtime.getURL ("NanumSquareOTF_acB.otf")
                 + "'); }"
                 + "@font-face { font-family: NanumSquare_R; src: url('"
@@ -16,21 +14,17 @@ styleNode.textContent   = "@font-face { font-family: SCDream9; src: url('"
 document.head.appendChild (styleNode);
 
 const linkSelectorDict = {
-  'google': '.jtfYYd a, a.WlydOe, a.srEl',
-  'naverNews': '.newspaper_article_lst a',
-  'naverNewsMain': '.cjs_journal_wrap a, a.cluster_text_headline',
+  'googleSearch': '.jtfYYd a, a.WlydOe, a.srEl',
   'naverSearch': 'a.link_tit, a.total_tit, a.news_tit, a.sub_tit, a.lnk_tit, a.link.elss, a.question_text',
 };
 const titleSelectorDict = {
-  'google': 'h3, .mCBkyc',
-  'naverNews': 'strong',
-  'naverNewsMain': '.cjs_t',
+  'googleSearch': 'h3, .mCBkyc',
   'naverSearch': null,
 };
 
 let linkSelector = '', titleSelector = '', pageType = '';
 if (document.URL.startsWith('https://www.google.com/search') || document.URL.startsWith('https://www.google.co.kr/search')) {
-  pageType = 'google';
+  pageType = 'googleSearch';
 } else if (document.URL.startsWith('https://search.naver.com/search.naver')) {
   pageType = 'naverSearch';
 }
@@ -39,12 +33,26 @@ linkSelector = linkSelectorDict[pageType];
 titleSelector = titleSelectorDict[pageType];
 
 document.querySelectorAll(linkSelector).forEach(elem => {
+    const amplitudeEventProperties = {
+      pageType: pageType,
+      source: window.location.href,
+      destination: elem.href,
+    };
+
+    elem.addEventListener('click', () => {
+      amplitude.getInstance().logEvent('click link', amplitudeEventProperties);
+      console.log('click');
+    });
   
     elem.addEventListener('mouseenter', async (e) => {
       const old = document.getElementById('tl-popup');
       if (old) {
         old.remove();
       }
+
+      
+
+      amplitude.getInstance().logEvent('preview link', amplitudeEventProperties);
 
       const popup = await fetch(chrome.runtime.getURL('/popup.html'));
       const popupHtml = await popup.text();
@@ -138,6 +146,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
           const old = document.getElementById('tl-popup');
           if (old) {
             old.remove();
+            amplitude.getInstance().logEvent('remove preview link', amplitudeEventProperties);
           }
         }
       };
