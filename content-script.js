@@ -122,7 +122,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         let lines = [];
 
         const controller = new AbortController()
-        const timeout = setTimeout(() => controller.abort(), 5000)
+        const timeout = setTimeout(() => controller.abort(), 7000)
 
           const threeliner = await fetch(`http://localhost:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
           clearTimeout(timeout);
@@ -143,16 +143,15 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         
         if (popupContent) {
           if (lines.length === 0) {
-            popupContent.innerHTML = '요약을 불러오지 못했습니다';
+            titleElement.textContent = '요약을 불러오지 못했습니다';
           } else {
             popupContent.innerHTML = lines.map(line => '- ' + line).join('<br/><br/>');
           }
         }
       } catch (e) {
-        titleElement.textContent = '';
-        popupContent.innerHTML = '내용을 불러오지 못했습니다';
+        titleElement.textContent = '내용을 불러오지 못했습니다';
         if (e.name === 'AbortError') {
-          popupContent.innerHTML = 'timeout';
+          titleElement.textContent = '시간 내에 요약을 불러오지 못했습니다';
         }
         console.log(e);
       }
