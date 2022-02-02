@@ -72,6 +72,10 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       
       const isMouseHeading = (e, rect) => {
         count++;
+        // buffer for rectangle
+        rect.left -= 50;
+        rect.bottom += 50;
+
         if (rect.left <= e.clientX && e.clientX <= rect.right
             && rect.top <= e.clientY && e.clientY <= rect.bottom) {
               return true;
@@ -86,22 +90,49 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         }
         const movementX = e.clientX - lastX;
         const movementY = e.clientY - lastY;
-        // console.log(e.clientX, e.clientY, lastX, lastY)
+
+        let sector = 1;
+        if (lastX < rect.left && lastY < rect.bottom) {
+          sector = 2;
+        } else if (lastX < rect.left && lastY >= rect.bottom) {
+          sector = 3;
+        } else if (lastX >= rect.left && lastY >= rect.bottom) {
+          sector = 4;
+        }
+
         lastX = e.clientX;
         lastY = e.clientY;
-        if (movementX < 0) {
-          return false;
+
+        if (rect.left === e.clientX || rect.right === e.clientX) {
+          return true;
         }
 
         const topLeftSlope = (rect.top - e.clientY) / (rect.left - e.clientX);
         const bottomLeftSlope = (rect.bottom - e.clientY) / (rect.left - e.clientX);
+        const bottomRightSlope = (rect.bottom - e.clientY) / (rect.right - e.clientX);
         const headingSlope = movementY / movementX;
 
-        return bottomLeftSlope > headingSlope && headingSlope > topLeftSlope;
+        console.log(topLeftSlope, bottomLeftSlope, bottomRightSlope, headingSlope);
+
+        if (sector === 2) {
+          console.log('sec2')
+          return movementX > 0 && 
+            bottomLeftSlope > headingSlope && headingSlope > topLeftSlope;
+        } else if (sector === 4) {
+          console.log('sec4')
+          return movementX > 0 && movementY < 0 &&
+            (bottomLeftSlope < headingSlope || headingSlope < bottomRightSlope);
+        } else if (sector === 3) {
+          console.log('sec3')
+          return movementY < 0 && 
+            topLeftSlope < headingSlope && headingSlope < bottomRightSlope;
+        } else {
+          console.log('sec1')
+          return true;
+        }
       }
 
       const mouseMoveHandler = async (e) => {
-        console.log(e.movementX, e.movementY);
         if (!isMouseInLinkArea && !isMouseHeading(e, rect)) {
           document.removeEventListener('mousemove', mouseMoveHandler);
           const old = document.getElementById('tl-popup');
@@ -114,7 +145,6 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       document.addEventListener('mousemove', mouseMoveHandler);
 
       elem.addEventListener('mouseleave', async (e) => {
-        console.log('leave', e);
         isMouseInLinkArea = false;
       });
 
