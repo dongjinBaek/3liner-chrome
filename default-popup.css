@@ -3,8 +3,28 @@
   src: url('/NanumSquareOTF_acB.otf');
 }
 
+body {
+  margin: 0;
+}
+
 button {
   cursor: pointer;
+}
+
+#tl-popup {
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  width:400px;
+  height:270px;
+  min-height:180px;
+  z-index:999999;
+  border:none;
+  background-color:white;
+  color:black;
+  /* box-shadow: 0px 0px 5px 1px gray; */
+  padding:20px;
+  /* border-radius:5px */
 }
 
 #tl-textarea{
