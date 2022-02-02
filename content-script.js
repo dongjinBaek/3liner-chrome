@@ -56,44 +56,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       const popupElement =  document.getElementById('tl-popup');
       const popupContent = document.getElementById('tl-popup-content');
       const titleElement = document.getElementById('tl-popup-title');
-      try {
-        let lines = [];
-
-        const controller = new AbortController()
-        const timeout = setTimeout(() => controller.abort(), 5000)
-
-          const threeliner = await fetch(`http://localhost:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
-          clearTimeout(timeout);
-
-          const res = await threeliner.text();
-          const resJson = JSON.parse(res);
-          lines = resJson.lines;
-        
-        document.getElementById('tl-popup-icon').style.display = 'inline-block';
-        document.getElementById('tl-popup-icon').src = chrome.runtime.getURL("logo.png");
-        
-        let title = elem.textContent;
-        if (titleSelector) {
-          title = elem.querySelector(titleSelector).textContent;
-        }
-        titleElement.textContent = title;
-        // document.getElementById('tl-popup-save').style.display = 'inline-block';
-        
-        if (popupContent) {
-          if (lines.length === 0) {
-            popupContent.innerHTML = '요약을 불러오지 못했습니다';
-          } else {
-            popupContent.innerHTML = lines.map(line => '- ' + line).join('<br/><br/>');
-          }
-        }
-      } catch (e) {
-        titleElement.textContent = '';
-        popupContent.innerHTML = '내용을 불러오지 못했습니다';
-        if (e.name === 'AbortError') {
-          popupContent.innerHTML = 'timeout';
-        }
-        console.log(e);
-      }
+      
 
       const removePopup = () => {
         const old = document.getElementById('tl-popup');
@@ -154,6 +117,45 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         console.log('leave', e);
         isMouseInLinkArea = false;
       });
+
+      try {
+        let lines = [];
+
+        const controller = new AbortController()
+        const timeout = setTimeout(() => controller.abort(), 5000)
+
+          const threeliner = await fetch(`http://localhost:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
+          clearTimeout(timeout);
+
+          const res = await threeliner.text();
+          const resJson = JSON.parse(res);
+          lines = resJson.lines;
+        
+        document.getElementById('tl-popup-icon').style.display = 'inline-block';
+        document.getElementById('tl-popup-icon').src = chrome.runtime.getURL("logo.png");
+        
+        let title = elem.textContent;
+        if (titleSelector) {
+          title = elem.querySelector(titleSelector).textContent;
+        }
+        titleElement.textContent = title;
+        // document.getElementById('tl-popup-save').style.display = 'inline-block';
+        
+        if (popupContent) {
+          if (lines.length === 0) {
+            popupContent.innerHTML = '요약을 불러오지 못했습니다';
+          } else {
+            popupContent.innerHTML = lines.map(line => '- ' + line).join('<br/><br/>');
+          }
+        }
+      } catch (e) {
+        titleElement.textContent = '';
+        popupContent.innerHTML = '내용을 불러오지 못했습니다';
+        if (e.name === 'AbortError') {
+          popupContent.innerHTML = 'timeout';
+        }
+        console.log(e);
+      }
 
   });
 
