@@ -13,6 +13,12 @@ styleNode.textContent   = "@font-face { font-family: NanumSquare_B; src: url('"
                 ;
 document.head.appendChild (styleNode);
 
+chrome.runtime.onInstalled.addListener(details => {
+  if (details.reason === chrome.runtime.OnInstalledReason.INSTALL) {
+    chrome.runtime.setUninstallURL('https://forms.gle/9jcVrBSxLv1sh5Sw9');
+  }
+});
+
 const linkSelectorDict = {
   'googleSearch': '.jtfYYd a, a.WlydOe, a.srEl',
   'naverSearch': 'a.link_tit, a.total_tit, a.news_tit, a.sub_tit, a.lnk_tit, a.link.elss, a.question_text',

@@ -6,8 +6,14 @@ const amplitudeEventProperties = {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('tl-summarize-btn').addEventListener('click', summarizeText)
+  document.getElementById('tl-summarize-btn').addEventListener('click', summarizeText);
+
   amplitude.getInstance().logEvent('open popup', amplitudeEventProperties);
+
+  document.getElementById('tl-feedback-btn').addEventListener('click', () => {
+    amplitude.getInstance().logEvent('feedback', amplitudeEventProperties);
+    chrome.tabs.create({ url: 'https://forms.gle/VCmjUZD8n75KJPaQ6' });
+  });
 });
 
 const summarizeText = async () => {

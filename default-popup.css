@@ -22,9 +22,7 @@ button {
   border:none;
   background-color:white;
   color:black;
-  /* box-shadow: 0px 0px 5px 1px gray; */
   padding:20px;
-  /* border-radius:5px */
 }
 
 #tl-textarea{
@@ -49,10 +47,7 @@ button {
   border:none; 
   padding:10px;
   border-radius: 5px;
-  /* background-color: #e9e6ff; */
   background-color: #efe3fc;
-  
-  /* color: #5e49d8; */
   color: #160a22;
 }
 
