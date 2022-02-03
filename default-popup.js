@@ -16,13 +16,19 @@ const summarizeText = async () => {
     alert('두 단어 이상 입력해주세요');
     return;
   }
+
+  const summarizeBtn = document.getElementById('tl-summarize-btn');
+
   try {
     amplitude.getInstance().logEvent('summarize text', {...amplitudeEventProperties, data: textArea.value});
     const controller = new AbortController()
     const timeout = setTimeout(() => controller.abort(), 5000)
     
     const content = textArea.value;
-    
+
+    summarizeBtn.textContent = '요약중';
+    summarizeBtn.disabled = true;
+
     const threeliner = await fetch(`http://localhost:5000/v1/summary?content=${content}`, { signal: controller.signal });
     clearTimeout(timeout);
     
@@ -45,7 +51,10 @@ const summarizeText = async () => {
       textArea.value = '내용을 불러오지 못했습니다';
       amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'error',  errorMessage: e});
     }
+
     console.log(e);
   }
-  
+
+  summarizeBtn.textContent = '요약하기';
+  summarizeBtn.disabled = false;
 }
