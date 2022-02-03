@@ -1,7 +1,7 @@
 {
   "name": "3Liner",
   "description": "3 Liner",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "manifest_version": 3,
   "icons": {
     "16": "logo128.png",
@@ -22,7 +22,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [ "popup.html", "logo.png", "NanumSquareOTF_acB.otf", "NanumSquareOTF_acR.otf", "default-popup.css"],
+      "resources": [ "popup.html", "logo.png", "NanumSquareOTF_acB.otf", "NanumSquareOTF_acR.otf"],
       "matches": [ "<all_urls>" ]
     }
   ]
