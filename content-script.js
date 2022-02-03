@@ -48,7 +48,6 @@ document.querySelectorAll(linkSelector).forEach(elem => {
 
     elem.addEventListener('click', () => {
       amplitude.getInstance().logEvent('click link', amplitudeEventProperties);
-      console.log('click');
     });
 
     
@@ -134,22 +133,17 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         const bottomRightSlope = (rect.bottom - e.clientY) / (rect.right - e.clientX);
         const headingSlope = movementY / movementX;
 
-        console.log(topLeftSlope, bottomLeftSlope, bottomRightSlope, headingSlope);
 
         if (sector === 2) {
-          console.log('sec2')
           return movementX > 0 && 
             bottomLeftSlope > headingSlope && headingSlope > topLeftSlope;
         } else if (sector === 4) {
-          console.log('sec4')
           return movementX > 0 && movementY < 0 &&
             (bottomLeftSlope < headingSlope || headingSlope < bottomRightSlope);
         } else if (sector === 3) {
-          console.log('sec3')
           return movementY < 0 && 
             topLeftSlope < headingSlope && headingSlope < bottomRightSlope;
         } else {
-          console.log('sec1')
           return true;
         }
       }
@@ -211,7 +205,6 @@ document.querySelectorAll(linkSelector).forEach(elem => {
           titleElement.textContent = '내용을 불러오지 못했습니다';
           amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'error',  errorMessage: e});
         }
-        console.log(e);
       }
 
   });

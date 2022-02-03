@@ -58,7 +58,6 @@ const summarizeText = async () => {
       amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'error',  errorMessage: e});
     }
 
-    console.log(e);
   }
 
   summarizeBtn.textContent = '요약하기';
