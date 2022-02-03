@@ -171,7 +171,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         const controller = new AbortController()
         const timeout = setTimeout(() => controller.abort(), 7000)
 
-          const threeliner = await fetch(`http://localhost:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
+          const threeliner = await fetch(`https://api.3-liner.com:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
           clearTimeout(timeout);
 
           const res = await threeliner.text();
