@@ -29,7 +29,7 @@ const summarizeText = async () => {
     summarizeBtn.textContent = '요약중';
     summarizeBtn.disabled = true;
 
-    const threeliner = await fetch(`http://localhost:5000/v1/summary?content=${content}`, { signal: controller.signal });
+    const threeliner = await fetch(`https://api.3-liner.com:5000/v1/summary?content=${content}`, { signal: controller.signal });
     clearTimeout(timeout);
     
     const res = await threeliner.text();
