@@ -49,6 +49,13 @@ button {
   border:none; 
   padding:10px;
   border-radius: 5px;
-  background-color: #e9e6ff;
-  color: #403294;
+  /* background-color: #e9e6ff; */
+  background-color: #efe3fc;
+  
+  /* color: #5e49d8; */
+  color: #160a22;
+}
+
+#tl-summarize-btn:hover {
+  background-color: #ead7fd;
 }

@@ -44,11 +44,14 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       amplitude.getInstance().logEvent('click link', amplitudeEventProperties);
       console.log('click');
     });
+
+    
   
     elem.addEventListener('mouseenter', async (e) => {
       const old = document.getElementById('tl-popup');
       if (old) {
         old.remove();
+        amplitude.getInstance().logEvent('remove preview link', {...amplitudeEventProperties, 'removedBy': 'new preview'});
       }
 
       
@@ -58,6 +61,10 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       const popup = await fetch(chrome.runtime.getURL('/popup.html'));
       const popupHtml = await popup.text();
       document.body.insertAdjacentHTML('beforeend', popupHtml);
+
+      document.getElementById('tl-popup').addEventListener('mouseenter', () => {
+        amplitude.getInstance().logEvent('mouse enter preview', amplitudeEventProperties);
+      });
 
       // document.getElementById('tl-popup').style.top = `${e.clientY}px`;
       // document.getElementById('tl-popup').style.left = `${e.clientX + 5}px`;
@@ -147,7 +154,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
           const old = document.getElementById('tl-popup');
           if (old) {
             old.remove();
-            amplitude.getInstance().logEvent('remove preview link', amplitudeEventProperties);
+            amplitude.getInstance().logEvent('remove preview link', {...amplitudeEventProperties, 'removedBy': 'mouse not heading preview'});
           }
         }
       };
@@ -184,14 +191,19 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         if (popupContent) {
           if (lines.length === 0) {
             titleElement.textContent = '요약을 불러오지 못했습니다';
+            amplitude.getInstance().logEvent('error', {...amplitudeEventProperties, errorType: 'empty result'});
           } else {
             popupContent.innerHTML = lines.map(line => '- ' + line).join('<br/><br/>');
+            amplitude.getInstance().logEvent('preview load', { ...amplitudeEventProperties, lines: lines });
           }
         }
       } catch (e) {
-        titleElement.textContent = '내용을 불러오지 못했습니다';
         if (e.name === 'AbortError') {
           titleElement.textContent = '시간 내에 요약을 불러오지 못했습니다';
+          amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'timeout' });
+        } else {
+          titleElement.textContent = '내용을 불러오지 못했습니다';
+          amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'error',  errorMessage: e});
         }
         console.log(e);
       }
