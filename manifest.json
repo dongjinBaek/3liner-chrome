@@ -8,7 +8,6 @@
     "48": "logo128.png",
     "128": "logo128.png"
   },
-  "permissions": ["storage", "activeTab", "scripting", "tabs"],
   "content_scripts": [
     {
       "matches": ["https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*"],
