@@ -165,13 +165,17 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         const controller = new AbortController()
         const timeout = setTimeout(() => controller.abort(), 7000)
 
-          const threeliner = await fetch(`https://api.3-liner.com:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
-          clearTimeout(timeout);
+        const threeliner = await fetch(`https://api.3-liner.com:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
+        clearTimeout(timeout);
 
-          const res = await threeliner.text();
-          const resJson = JSON.parse(res);
-          lines = resJson.lines;
-        
+        const res = await threeliner.text();
+        const resJson = JSON.parse(res);
+        lines = resJson.lines;
+
+        // 요약을 로딩하는 동안 팝업이 사라졌으면, 그대로 종료.
+        if (document.getElementById('tl-popup') === null) {
+          return;
+        }
         document.getElementById('tl-popup-icon').style.display = 'inline-block';
         document.getElementById('tl-popup-icon').src = chrome.runtime.getURL("logo.png");
         
