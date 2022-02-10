@@ -80,7 +80,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         }
       }
 
-      const rect = document.getElementById('tl-popup').getBoundingClientRect();
+      let rect = document.getElementById('tl-popup').getBoundingClientRect();
       let isMouseInLinkArea = true;
 
       let count = -1, lastX = 0, lastY = 0;
@@ -142,18 +142,26 @@ document.querySelectorAll(linkSelector).forEach(elem => {
         }
       }
 
-      const mouseMoveHandler = async (e) => {
-        if (!isMouseInLinkArea && !isMouseHeading(e, rect)) {
-          document.removeEventListener('mousemove', mouseMoveHandler);
-          const old = document.getElementById('tl-popup');
-          if (old) {
-            old.remove();
-            amplitude.getInstance().logEvent('remove preview link', {...amplitudeEventProperties, 'removedBy': 'mouse not heading preview'});
+      
+
+      addMouseMoveHandler = (rect) => {
+        const mouseMoveHandler = async (e) => {
+          if (!isMouseInLinkArea && !isMouseHeading(e, rect)) {
+            document.removeEventListener('mousemove', mouseMoveHandler);
+            const old = document.getElementById('tl-popup');
+            if (old) {
+              old.remove();
+              amplitude.getInstance().logEvent('remove preview link', {...amplitudeEventProperties, 'removedBy': 'mouse not heading preview'});
+            }
           }
-        }
+        };
+
+        document.addEventListener('mousemove', mouseMoveHandler);
+
+        return () => document.removeEventListener('mousemove', mouseMoveHandler);
       };
 
-      document.addEventListener('mousemove', mouseMoveHandler);
+      const removeMouseMoveHandler = addMouseMoveHandler(rect);
 
       elem.addEventListener('mouseleave', async (e) => {
         isMouseInLinkArea = false;
@@ -204,6 +212,10 @@ document.querySelectorAll(linkSelector).forEach(elem => {
           amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'error',  errorMessage: e});
         }
       }
+
+      removeMouseMoveHandler();
+      rect = document.getElementById('tl-popup').getBoundingClientRect();
+      addMouseMoveHandler(rect);
 
   });
 
