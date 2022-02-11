@@ -2,7 +2,7 @@ amplitude.getInstance().init("b864283ca45efdcb2c800fb109d6643f");
 
 const amplitudeEventProperties = {
   pageType: 'popup',
-  version: '0.1.0',
+  version: '0.1.1',
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -25,7 +25,7 @@ const summarizeText = async () => {
     alert('3000자 이하로 입력해주세요')
     return;
   }
-  
+
   const summarizeBtn = document.getElementById('tl-summarize-btn');
 
   try {

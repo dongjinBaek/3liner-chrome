@@ -37,7 +37,7 @@ document.querySelectorAll(linkSelector).forEach(elem => {
       pageType: pageType,
       source: window.location.href,
       destination: elem.href,
-      version: '0.1.0',
+      version: '0.1.1',
     };
 
     elem.addEventListener('click', () => {
