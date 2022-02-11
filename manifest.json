@@ -15,6 +15,9 @@
       "all_frames": true
     }
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "host_permissions": ["https://api.3-liner.com:5000/*"],
   "action": {
     "default_popup": "default-popup.html"
