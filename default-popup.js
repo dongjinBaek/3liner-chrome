@@ -21,8 +21,11 @@ const summarizeText = async () => {
   if (textArea.value.indexOf(' ') === -1) {
     alert('두 단어 이상 입력해주세요');
     return;
+  } else if (textArea.value.length > 3000) {
+    alert('3000자 이하로 입력해주세요')
+    return;
   }
-
+  
   const summarizeBtn = document.getElementById('tl-summarize-btn');
 
   try {
