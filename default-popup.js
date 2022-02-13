@@ -15,7 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.tabs.create({ url: 'https://forms.gle/VCmjUZD8n75KJPaQ6' });
   });
 
-  document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChange);
+  chrome.storage.sync.get(['enablePreview'], (result) => {
+    document.getElementById('tl-popup-preview-switch').checked = result.enablePreview;
+    document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChange);
+  });
 });
 
 const summarizeText = async () => {
