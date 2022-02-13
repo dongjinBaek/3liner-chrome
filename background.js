@@ -6,9 +6,10 @@ chrome.runtime.onInstalled.addListener(function(details) {
           chrome.runtime.setUninstallURL(uninstallUrlLink);
       }
 
-      chrome.storage.sync.set({'enablePreview': true}, ()=>{});
-      chrome.storage.sync.set({'anonymousID': generateAnonymousID()}, ()=>{});
   }
+  //TODO: update 끝나면 Install 안으로 옮기기
+  chrome.storage.sync.set({'enablePreview': true}, ()=>{});
+  chrome.storage.sync.set({'anonymousID': generateAnonymousID()}, ()=>{});
 });
 
 const generateAnonymousID = () => {
