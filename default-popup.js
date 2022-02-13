@@ -73,5 +73,7 @@ const summarizeText = async () => {
 }
 
 const onPreviewSwitchChange = (e) => {
-  chrome.storage.sync.set({'enablePreview': e.target.checked}, () => {});
+  chrome.storage.sync.set({'enablePreview': e.target.checked}, () => {
+    amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+  });
 }
