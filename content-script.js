@@ -1,11 +1,10 @@
 amplitude.getInstance().init("b864283ca45efdcb2c800fb109d6643f");
+loadFonts(document);
 
-chrome.storage.sync.get(['enablePreview'], (result) => {
+chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
   if (!result.enablePreview) {
     return;
   }
-
-  loadFonts(document);
 
   const { linkSelector, titleSelector, pageType } = getPageInfo(document.URL);
 
@@ -15,6 +14,7 @@ chrome.storage.sync.get(['enablePreview'], (result) => {
         source: window.location.href,
         destination: elem.href,
         version: '0.1.1',
+        anonymousID: result.anonymousID,
       };
 
       elem.addEventListener('click', () => {
