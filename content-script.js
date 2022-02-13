@@ -1,6 +1,6 @@
 amplitude.getInstance().init("b864283ca45efdcb2c800fb109d6643f");
 
-
+chrome.storage.sync.get(['enablePreview'], (result) => {console.log(result.enablePreview)});
 
 const styleNode           = document.createElement ("style");
 styleNode.type          = "text/css";

@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     amplitude.getInstance().logEvent('feedback', amplitudeEventProperties);
     chrome.tabs.create({ url: 'https://forms.gle/VCmjUZD8n75KJPaQ6' });
   });
+
+  document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChange);
 });
 
 const summarizeText = async () => {
@@ -65,4 +67,8 @@ const summarizeText = async () => {
 
   summarizeBtn.textContent = '요약하기';
   summarizeBtn.disabled = false;
+}
+
+const onPreviewSwitchChange = (e) => {
+  chrome.storage.sync.set({'enablePreview': e.target.checked}, () => {});
 }

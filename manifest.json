@@ -15,6 +15,9 @@
       "all_frames": true
     }
   ],
+  "permissions": [
+    "storage"
+  ],
   "background": {
     "service_worker": "background.js"
   },
