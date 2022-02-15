@@ -2,13 +2,13 @@ amplitude.getInstance().init("b864283ca45efdcb2c800fb109d6643f");
 loadFonts(document);
 
 chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
-  if (!result.enablePreview) {
-    return;
-  }
+  
 
   const { linkSelector, titleSelector, pageType } = getPageInfo(document.URL);
 
-  document.querySelectorAll(linkSelector).forEach(elem => {
+  let mouseEnterListeners = [];
+
+  document.querySelectorAll(linkSelector).forEach((elem, index) => {
       const amplitudeEventProperties = {
         pageType: pageType,
         source: window.location.href,
@@ -22,8 +22,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
       });
 
       
-    
-      elem.addEventListener('mouseenter', async (e) => {
+      mouseEnterListeners[index] = async (e) => {
         const old = document.getElementById('tl-popup');
         if (old) {
           old.remove();
@@ -195,10 +194,27 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         rect = document.getElementById('tl-popup').getBoundingClientRect();
         addMouseMoveHandler(rect);
 
-    });
+    }
 
+    if (result.enablePreview) {
+      elem.addEventListener('mouseenter', mouseEnterListeners[index]);
+    }
   });
 
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'sync' && changes.enablePreview) {
+      if (changes.enablePreview.newValue === false) {
+        document.querySelectorAll(linkSelector).forEach((elem, index) => {
+          elem.removeEventListener('mouseenter', mouseEnterListeners[index]);
+        });
+      } else if (changes.enablePreview.newValue === true) {
+        document.querySelectorAll(linkSelector).forEach((elem, index) => {
+          elem.addEventListener('mouseenter', mouseEnterListeners[index]);
+        });
+      }
+    }
+    console.log(changes.anonymousID)
+  });
 
 });
 
