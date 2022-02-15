@@ -176,6 +176,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
               titleElement.textContent = '요약을 불러오지 못했습니다';
               amplitude.getInstance().logEvent('error', {...amplitudeEventProperties, errorType: 'empty result'});
             } else {
+              document.getElementById('tl-content-wrap').style.display = 'block';
               popupContent.innerHTML = lines.map(line => '- ' + line).join('<br/><br/>');
               amplitude.getInstance().logEvent('preview load', { ...amplitudeEventProperties, lines: lines });
             }

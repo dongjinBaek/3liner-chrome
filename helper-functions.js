@@ -17,17 +17,21 @@ const getPageInfo = (url) => {
   const linkSelectorDict = {
     'googleSearch': '.jtfYYd a, a.WlydOe, a.srEl',
     'naverSearch': 'a.link_tit, a.total_tit, a.news_tit, a.sub_tit, a.lnk_tit, a.link.elss, a.question_text',
+    'naverNews': 'a.cjs_news_a, a.cluster_text_headline, a.offc_ct_wraplink, a.article_lst--title_only'
   };
   const titleSelectorDict = {
     'googleSearch': 'h3, .mCBkyc',
     'naverSearch': null,
+    'naverNews': null,
   };
-  
+
   let linkSelector = '', titleSelector = '', pageType = '';
   if (url.startsWith('https://www.google.com/search') || url.startsWith('https://www.google.co.kr/search')) {
     pageType = 'googleSearch';
   } else if (url.startsWith('https://search.naver.com/search.naver')) {
     pageType = 'naverSearch';
+  } else if (url.startsWith('https://news.naver.com')) {
+    pageType = 'naverNews';
   }
   
   linkSelector = linkSelectorDict[pageType];

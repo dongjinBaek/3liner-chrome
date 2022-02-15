@@ -2,16 +2,25 @@
 <html>
   <body>
     <!--palette #8679cb #5b80bb #0775e5 #5e49d8 #6b686e-->
-    <div id='tl-popup' style='position:fixed;top:10px;right:10px;display:flex;flex-direction:column;justify-content:space-between;width:400px;height:auto;min-height:180px;z-index:999999;border:none;background-color:white;color:black;box-shadow: 0px 0px 5px 1px #6b686e;padding:20px;border-radius:5px;line-height: 150%;'>
+    <div id='tl-popup' style='position:fixed;top:10px;right:10px;display:flex;flex-direction:column;justify-content:space-between;width:400px;height:auto;min-height:180px;z-index:999999;border:none;background-color:white;color:black;box-shadow: 0px 0px 5px 1px #6b686e;padding:20px;padding-top:20px;border-radius:5px;line-height: 150%;'>
       <!-- <div id='tl-popup' style='position:fixed;border-top:10px solid black;top:5px;right:5px;display:flex;flex-direction:column;justify-content:space-between;width:400px;height:270px;z-index:999999;border:none;background-color:#fbfbfd;color:black;box-shadow: 0px 0px 25px 0px ;padding:20px;border-radius:5px'> -->
       <div style='word-break: keep-all; word-wrap:break-word;'>
         <div style='margin-bottom: 20px;display: flex;justify-content: flex-start;'>
-          <span id='tl-popup-title' style='font-family: NanumSquare_B;font-weight:bold; font-size:18px;'>로딩 중...</span>
+          <span id='tl-popup-title' style='font-family: NanumSquare_B;font-weight:bold; font-size:18px;margin-left:10px;'>로딩 중...</span>
         </div>
-        <div id='tl-popup-content' style='font-size:14px;font-family: NanumSquare_R;color:#4d5156'></div>
-        <!-- <div id='tl-popup-false-content' style='background-color:#e7d9f3;width:100%;height:14px;'> </div> -->
+        <div id='tl-content-wrap' style='display:none;'>
+          <!-- <div style='font-family: NanumSquare_B;font-weight:bold; font-size:14px;margin-bottom: 10px;padding-left:10px;'>세줄 요약</div> -->
+          <div id='tl-popup-3line-box' style='background-color: #f3f3f3;border-radius:10px;padding:10px;'>
+            <div id='tl-popup-content' style='font-size:14px;font-family: NanumSquare_R;color:#4d5156'></div>
+          </div>
+          <!-- <div style='font-family: NanumSquare_B;font-weight:bold; font-size:14px;margin-bottom:10px;margin-top:10px;padding-left:10px;'>'오미크론' 포함 핵심문장</div>
+          <div id='tl-popup-keywordbox' style='padding-top:10px;margin-top:10px; background-color: #f3f3f3;padding:10px;border-radius: 10px;'>
+            <div id='tl-popup-keyword-sentences' style='font-size:14px;font-family: NanumSquare_R;color:#4d5156'>- 전파력이 강한 <span style='background-color: #FFFF00;'>오미크론</span> 변이가 대유행하면서 다음 달 초에는 최대 36만 명까지 환자가 발생할 수 있다는 전망도 나오고 있습니다.</div>
+            <div style='margin-top:5px;font-size:12px;font-family: NanumSquare_R;color:#4d5156;text-decoration: underline;'>'오미크론' 포함 문장(6개) 더보기</div>
+          </div> -->
+        </div>
       </div>
-      <div style='margin-top:20px;position:sticky;bottom:10px; display:flex; width: 100%; justify-content:flex-end;font-weight:bold;;font-family: NanumSquare_R;'>
+      <div style='margin-top:10px;position:sticky;bottom:10px; display:flex; width: 100%; justify-content:flex-end;font-weight:bold;;font-family: NanumSquare_R;'>
         <!-- <button style='border:none; padding:10px;border-radius: 5px;background-color: white;'><u>피드백 남기기</u></button> -->
         <img src='' id='tl-popup-icon' height='20' width='40' style='display:none;margin-top:10px;margin-right:5px;background-color: white;'/>
       </div>

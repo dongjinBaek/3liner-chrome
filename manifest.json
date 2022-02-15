@@ -10,7 +10,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*"],
+      "matches": ["https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*", "https://news.naver.com/**"],
       "js": ["amplitude.js", "helper-functions.js", "content-script.js"],
       "all_frames": true
     }
