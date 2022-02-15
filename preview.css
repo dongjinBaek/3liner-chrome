@@ -1,0 +1,21 @@
+.form-check-input:checked {
+  background-color: #ead7fd;
+  border-color: #ead7fd;
+}
+
+.form-check-input:focus{
+  border-color:#efe3fc;
+  outline:0;
+  box-shadow:0 0 0 .25rem #efe3fca0
+}
+
+#tl-popup-preview-switch-description {
+  position: absolute;
+  bottom: -30px;
+  left: 0px;
+  background-color: #f3f3f3;
+  border-radius: 5px;
+  padding: 3px;
+  font-size: 10px;
+  color: #4d5156;
+}

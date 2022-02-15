@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.getElementById('tl-summarize-btn').addEventListener('click', summarizeTextGenerator(amplitudeEventProperties));
-    console.log('hi2')
     amplitude.getInstance().logEvent('open popup', amplitudeEventProperties);
 
     document.getElementById('tl-feedback-btn').addEventListener('click', () => {

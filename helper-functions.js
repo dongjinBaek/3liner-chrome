@@ -43,3 +43,14 @@ const getPageInfo = (url) => {
     pageType,
   }
 }
+
+const onPreviewSwitchChangeGenerator = (amplitudeEventProperties) => {
+  return onPreviewSwitchChange = (e) => {
+    chrome.storage.sync.set({'enablePreview': e.target.checked}, () => {
+      amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+      if (!e.target.checked) {
+        alert('우상단의 확장 프로그램 아이콘을 클릭해서 미리보기 기능을 다시 활성화 할 수 있습니다.')
+      }
+    });
+  }
+}

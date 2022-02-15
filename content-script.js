@@ -41,6 +41,8 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
           amplitude.getInstance().logEvent('mouse enter preview', amplitudeEventProperties);
         });
 
+        document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChangeGenerator(amplitudeEventProperties));
+
         // document.getElementById('tl-popup').style.top = `${e.clientY}px`;
         // document.getElementById('tl-popup').style.left = `${e.clientX + 5}px`;
 
@@ -213,7 +215,6 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         });
       }
     }
-    console.log(changes.anonymousID)
   });
 
 });
