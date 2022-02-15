@@ -1,6 +1,6 @@
 {
-  "name": "3Liner - 마우스만 올려도 확인하는 세줄요약",
-  "description": "마우스만 올려도 확인하는 세줄요약",
+  "name": "3Liner - 마우스만 올려도 볼 수 있는 세줄요약",
+  "description": "마우스만 올려도 볼 수 있는 세줄요약",
   "version": "0.1.1",
   "manifest_version": 3,
   "icons": {
@@ -10,7 +10,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*", "https://news.naver.com/**"],
+      "matches": ["https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*"],
       "css": ["bootstrap-5.1.3.min.css", "preview.css"],
       "js": ["amplitude.js", "helper-functions.js", "content-script.js"],
       "all_frames": true
