@@ -13,7 +13,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         pageType: pageType,
         source: window.location.href,
         destination: elem.href,
-        version: '0.1.1',
+        version: '0.1.2',
         anonymousID: result.anonymousID,
       };
 

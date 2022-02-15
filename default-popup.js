@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
     const amplitudeEventProperties = {
       pageType: 'popup',
-      version: '0.1.1',
+      version: '0.1.2',
       anonymousID: result.anonymousID,
     }
 
