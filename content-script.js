@@ -29,8 +29,6 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
           amplitude.getInstance().logEvent('remove preview link', {...amplitudeEventProperties, 'removedBy': 'new preview'});
         }
 
-        
-
         amplitude.getInstance().logEvent('preview link', amplitudeEventProperties);
 
         const popup = await fetch(chrome.runtime.getURL('/popup.html'));
@@ -43,8 +41,16 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
 
         document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChangeGenerator(amplitudeEventProperties));
 
-        // document.getElementById('tl-popup').style.top = `${e.clientY}px`;
-        // document.getElementById('tl-popup').style.left = `${e.clientX + 5}px`;
+        let previewLocation = '';
+        if (e.clientY < window.innerHeight / 2) {
+          document.getElementById('tl-popup').style.top = `${elem.getBoundingClientRect().bottom + 10}px`;
+          document.getElementById('tl-popup').style.left = `${e.clientX + 10}px`;
+          previewLocation = 'belowLink';
+        } else {
+          document.getElementById('tl-popup').style.top = `${elem.getBoundingClientRect().top - 10 - 180}px`;
+          document.getElementById('tl-popup').style.left = `${e.clientX + 10}px`;
+          previewLocation = 'aboveLink';
+        }
 
         const popupElement =  document.getElementById('tl-popup');
         const popupContent = document.getElementById('tl-popup-content');
@@ -193,6 +199,9 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         }
 
         removeMouseMoveHandler();
+        if (previewLocation === 'aboveLink') {
+          popupElement.style.top = parseInt(popupElement.style.top) -  popupElement.clientHeight + 180 + 'px';
+        }
         rect = document.getElementById('tl-popup').getBoundingClientRect();
         addMouseMoveHandler(rect);
 
