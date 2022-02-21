@@ -1,5 +1,4 @@
-console.log('hi');
-amplitude.getInstance().init("b864283ca45efdcb2c800fb109d6643f");
+amplitude.getInstance().init(AMPLITUDE_KEY);
 
 
 
@@ -7,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
   chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
     const amplitudeEventProperties = {
       pageType: 'popup',
-      version: '0.1.2',
+      version: VERSION,
       anonymousID: result.anonymousID,
     }
 
@@ -47,7 +46,7 @@ const summarizeTextGenerator = (amplitudeEventProperties) => {
       summarizeBtn.textContent = '요약중';
       summarizeBtn.disabled = true;
       
-      const threeliner = await fetch(`https://api.3-liner.com:5000/v1/summary?content=${content}`, { signal: controller.signal });
+      const threeliner = await fetch(`${BACKEND_PREFIX}/v1/summary?content=${content}`, { signal: controller.signal });
       clearTimeout(timeout);
       
       const res = await threeliner.text();

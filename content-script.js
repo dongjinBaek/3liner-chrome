@@ -1,4 +1,4 @@
-amplitude.getInstance().init("b864283ca45efdcb2c800fb109d6643f");
+amplitude.getInstance().init(AMPLITUDE_KEY);
 loadFonts(document);
 
 chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
@@ -13,7 +13,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         pageType: pageType,
         source: window.location.href,
         destination: elem.href,
-        version: '0.1.2',
+        version: VERSION,
         anonymousID: result.anonymousID,
       };
 
@@ -159,7 +159,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
           const controller = new AbortController()
           const timeout = setTimeout(() => controller.abort(), 7000)
 
-          const threeliner = await fetch(`https://api.3-liner.com:5000/v1/summary?url=${elem.href}`, { signal: controller.signal });
+          const threeliner = await fetch(`${BACKEND_PREFIX}/v1/summary?url=${elem.href}`, { signal: controller.signal });
           clearTimeout(timeout);
 
           const res = await threeliner.text();
