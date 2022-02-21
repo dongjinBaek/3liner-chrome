@@ -39,16 +39,18 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
           amplitude.getInstance().logEvent('mouse enter preview', amplitudeEventProperties);
         });
 
+        document.getElementById('tl-popup').style.opacity = 1;
+
         document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChangeGenerator(amplitudeEventProperties));
 
         let previewLocation = '';
         if (e.clientY < window.innerHeight / 2) {
           document.getElementById('tl-popup').style.top = `${elem.getBoundingClientRect().bottom + 10}px`;
-          document.getElementById('tl-popup').style.left = `${e.clientX + 10}px`;
+          document.getElementById('tl-popup').style.left = `${e.clientX - 10}px`;
           previewLocation = 'belowLink';
         } else {
-          document.getElementById('tl-popup').style.top = `${elem.getBoundingClientRect().top - 10 - 180}px`;
-          document.getElementById('tl-popup').style.left = `${e.clientX + 10}px`;
+          document.getElementById('tl-popup').style.top = `${elem.getBoundingClientRect().top - 15 - 180}px`;
+          document.getElementById('tl-popup').style.left = `${e.clientX - 10}px`;
           previewLocation = 'aboveLink';
         }
 
