@@ -4,7 +4,7 @@ loadFonts(document);
 chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
   
 
-  const { linkSelector, titleSelector, pageType } = getPageInfo(document.URL);
+  const { linkSelector, titleSelector, pageType, searchQueryParam } = getPageInfo(document.URL);
 
   let mouseEnterListeners = [];
 
@@ -13,6 +13,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         pageType: pageType,
         source: window.location.href,
         destination: elem.href,
+        searchQueryParam: searchQueryParam,
         version: VERSION,
         anonymousID: result.anonymousID,
       };
@@ -156,15 +157,21 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         try {
           let lines = [];
 
+          const urlParams = new URLSearchParams(window.location.search);
+          const terms = urlParams.get(searchQueryParam);
+          document.getElementById('tl-popup-keyword-title').textContent = `'${terms}' 포함 핵심문장`;
+
           const controller = new AbortController()
           const timeout = setTimeout(() => controller.abort(), 7000)
 
-          const threeliner = await fetch(`${BACKEND_PREFIX}/v1/summary?url=${elem.href}`, { signal: controller.signal });
+          const threeliner = await fetch(`${BACKEND_PREFIX}/v1/summary?url=${elem.href}&terms=${terms}`, { signal: controller.signal });
           clearTimeout(timeout);
 
           const res = await threeliner.text();
           const resJson = JSON.parse(res);
           lines = resJson.lines;
+          keySentences = resJson.keySentences;
+          console.log(resJson)
 
           // 요약을 로딩하는 동안 팝업이 사라졌으면, 그대로 종료.
           if (document.getElementById('tl-popup') === null) {
@@ -187,6 +194,21 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
             } else {
               document.getElementById('tl-content-wrap').style.display = 'block';
               popupContent.innerHTML = lines.map(line => '- ' + line).join('<br/><br/>');
+
+              const termList = terms.split(' ');
+              document.getElementById('tl-popup-keyword-sentences').innerHTML = keySentences.slice(0, 3).map(sentence => {
+                for (const term of termList) {
+                  const regexRule = new RegExp(term, 'g');
+                  sentence = sentence.replace(regexRule, `<span style='color:red;'>${term}</span>`);
+                }
+                return sentence;
+              }).join('<br/><br/>');
+              // document.getElementById('tl-more-keyword-sentences').textContent = `'${terms}'포함 핵심문장(${sentences.length}개) 더보기`;
+              console.log();
+              console.log(document.getElementById('tl-popup').style.top);
+              console.log(document.getElementById('tl-popup').offsetHeight);
+              console.log(document.getElementsByTagName('body')[0].offsetHeight);
+              console.log(window.innerHeight);
               amplitude.getInstance().logEvent('preview load', { ...amplitudeEventProperties, lines: lines });
             }
           }
@@ -203,6 +225,15 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         removeMouseMoveHandler();
         if (previewLocation === 'aboveLink') {
           popupElement.style.top = parseInt(popupElement.style.top) -  popupElement.clientHeight + 180 + 'px';
+        }
+        console.log(popupElement.style.top, popupElement.clientHeight, window.innerHeight)
+        if (parseInt(popupElement.style.top) + popupElement.clientHeight + 10 >= window.innerHeight) {
+          popupElement.style.bottom = '10px';
+          popupElement.style.top = 'auto';
+        }
+        if (parseInt(popupElement.style.top) < 0) {
+          popupElement.style.top = '10px';
+          popupElement.style.bottom = 'auto';
         }
         rect = document.getElementById('tl-popup').getBoundingClientRect();
         addMouseMoveHandler(rect);

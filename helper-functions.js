@@ -24,8 +24,13 @@ const getPageInfo = (url) => {
     'naverSearch': null,
     'naverNews': null,
   };
+  const searchQueryParamDict = {
+    'googleSearch': 'q',
+    'naverSearch': 'query',
+    'naverNews': null,
+  };
 
-  let linkSelector = '', titleSelector = '', pageType = '';
+  let linkSelector = '', titleSelector = '', pageType = '', searchQueryParam = '';
   if (url.startsWith('https://www.google.com/search') || url.startsWith('https://www.google.co.kr/search')) {
     pageType = 'googleSearch';
   } else if (url.startsWith('https://search.naver.com/search.naver')) {
@@ -36,11 +41,13 @@ const getPageInfo = (url) => {
   
   linkSelector = linkSelectorDict[pageType];
   titleSelector = titleSelectorDict[pageType];
+  searchQueryParam = searchQueryParamDict[pageType];
 
   return {
     linkSelector,
     titleSelector,
     pageType,
+    searchQueryParam,
   }
 }
 

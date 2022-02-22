@@ -1,3 +1,88 @@
+@font-face {
+  font-family: NanumSquare_B;
+  src: url('/NanumSquareOTF_acB.otf');
+}
+@font-face {
+  font-family: NanumSquare_R;
+  src: url('/NanumSquareOTF_acR.otf');
+}
+
+#tl-popup {
+  position:fixed;
+  opacity:0;
+  right:10px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  transition: opacity 0.8s ease-out;
+  width:400px;
+  height:auto;
+  z-index:999999;
+  border:none;
+  background-color:white;
+  color:black;
+  box-shadow: 0px 0px 5px 1px #6b686e;
+  padding:20px;
+  padding-top:20px;
+  border-radius:5px;
+  line-height: 150%;
+}
+
+#tl-popup-title {
+  font-family: NanumSquare_B;
+  font-weight:bold;
+  font-size:18px;
+}
+
+.tl-middle-title {
+  font-family: NanumSquare_B;
+  font-weight:bold;
+  font-size:14px;
+  margin-bottom: 10px;
+  padding-left:10px;
+}
+
+.tl-text-box {
+  padding-top:10px;
+  margin-top:10px;
+  background-color: #f3f3f3;
+  padding:10px;
+  border-radius: 10px;
+}
+
+.tl-preview-text {
+  font-size:14px;
+  font-family: NanumSquare_R;
+  color:#4d5156;
+}
+
+#tl-more-keyword-sentences {
+  margin-top:5px;
+  font-size:12px;
+  font-family: NanumSquare_R;
+  color:#4d5156;
+  text-decoration: underline;
+}
+
+#tl-preview-footer {
+  margin-top:10px;
+  position:sticky;
+  bottom:10px;
+  display:flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-weight:bold;
+  font-family: NanumSquare_R;
+}
+
+#tl-popup-icon {
+  display:none;
+  margin-top:10px;
+  margin-right:5px;
+  background-color: white;
+}
+
 .form-check-input:checked {
   background-color: #ead7fd;
   border-color: #ead7fd;
