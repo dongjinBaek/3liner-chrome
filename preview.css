@@ -17,7 +17,7 @@
   transition: opacity 0.8s ease-out;
   width:400px;
   height:auto;
-  z-index:999999;
+  z-index:999998;
   border:none;
   background-color:white;
   color:black;
@@ -31,13 +31,13 @@
 #tl-popup-title {
   font-family: NanumSquare_B;
   font-weight:bold;
-  font-size:18px;
+  font-size:16px;
 }
 
 .tl-middle-title {
   font-family: NanumSquare_B;
   font-weight:bold;
-  font-size:14px;
+  font-size:12px;
   margin-bottom: 10px;
   padding-left:10px;
 }
@@ -51,7 +51,7 @@
 }
 
 .tl-preview-text {
-  font-size:14px;
+  font-size:12px;
   font-family: NanumSquare_R;
   color:#4d5156;
 }
@@ -62,6 +62,13 @@
   font-family: NanumSquare_R;
   color:#4d5156;
   text-decoration: underline;
+}
+
+#tl-arrow-right {
+  z-index: 999999;
+}
+#tl-arrow-right:hover {
+  cursor:pointer;
 }
 
 #tl-preview-footer {

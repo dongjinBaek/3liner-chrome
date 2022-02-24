@@ -40,6 +40,20 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
           amplitude.getInstance().logEvent('mouse enter preview', amplitudeEventProperties);
         });
 
+        // const arrow = document.getElementById('tl-arrow-right')
+        //       console.log(arrow);
+        //       arrow.style.backgroundColor = 'black';
+        //       arrow.addEventListener('click', (e) => 
+        //         console.log('1234)')
+        //         // document.getElementById('tl-popup-keyword-sentences').innerHTML = keySentences.slice(startIdx, endIdx).map(sentence => {
+        //         //   for (const term of termList) {
+        //         //     const regexRule = new RegExp(term, 'g');
+        //         //     sentence = sentence.replace(regexRule, `<span style='color:red;'>${term}</span>`);
+        //         //   }
+        //         //   return sentence;
+        //         // }).join('<br/><br/>');
+        //       );
+
         document.getElementById('tl-popup').style.opacity = 1;
 
         document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChangeGenerator(amplitudeEventProperties));
@@ -196,19 +210,20 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
               popupContent.innerHTML = lines.map(line => '- ' + line).join('<br/><br/>');
 
               const termList = terms.split(' ');
-              document.getElementById('tl-popup-keyword-sentences').innerHTML = keySentences.slice(0, 3).map(sentence => {
+              let startIdx = 0; endIdx = 3;
+              document.getElementById('tl-popup-keyword-sentences').innerHTML = keySentences.slice(startIdx, endIdx).map(sentence => {
                 for (const term of termList) {
                   const regexRule = new RegExp(term, 'g');
                   sentence = sentence.replace(regexRule, `<span style='color:red;'>${term}</span>`);
                 }
                 return sentence;
               }).join('<br/><br/>');
+
+              
+
+              
+              console.log(1234);
               // document.getElementById('tl-more-keyword-sentences').textContent = `'${terms}'포함 핵심문장(${sentences.length}개) 더보기`;
-              console.log();
-              console.log(document.getElementById('tl-popup').style.top);
-              console.log(document.getElementById('tl-popup').offsetHeight);
-              console.log(document.getElementsByTagName('body')[0].offsetHeight);
-              console.log(window.innerHeight);
               amplitude.getInstance().logEvent('preview load', { ...amplitudeEventProperties, lines: lines });
             }
           }
@@ -221,6 +236,8 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
             amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'error',  errorMessage: e});
           }
         }
+
+        
 
         removeMouseMoveHandler();
         if (previewLocation === 'aboveLink') {
@@ -235,7 +252,18 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
           popupElement.style.top = '10px';
           popupElement.style.bottom = 'auto';
         }
+
+        // 우측 사이드바에 위치시키는 코드. 
+        // popupElement.style.top = '10px';
+        // popupElement.style.right = '10px';
+        // popupElement.style.left = 'auto';
+        // popupElement.style.bottom = 'auto';
+
         rect = document.getElementById('tl-popup').getBoundingClientRect();
+        const elemRect = elem.getBoundingClientRect();
+        // linedraw(300, 500.1, 400, 0)
+        // linedraw(elemRect.right, elemRect.top, rect.left, rect.top);
+        // linedraw(elemRect.right, elemRect.bottom, rect.left, rect.bottom);
         addMouseMoveHandler(rect);
 
     }
@@ -260,4 +288,23 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
   });
 
 });
+
+function linedraw(x1, y1, x2, y2) {
+  if (x2 < x1) {
+      var tmp;
+      tmp = x2 ; x2 = x1 ; x1 = tmp;
+      tmp = y2 ; y2 = y1 ; y1 = tmp;
+  }
+
+  var lineLength = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  var m = (y2 - y1) / (x2 - x1);
+
+  var degree = Math.atan(m) * 180 / Math.PI;
+
+  document.body.innerHTML += "<div class='line' style='transform-origin: top left; transform: rotate(" + degree + "deg); width: " + lineLength + "px; height: 1px; background: black; position: absolute; top: " + y1 + "px; left: " + x1 + "px;z-index:9999;'></div>";
+}
+
+const mylog = () => {
+  console.log(1);
+}
 
