@@ -62,6 +62,36 @@ const onPreviewSwitchChangeGenerator = (amplitudeEventProperties) => {
   }
 }
 
+// create PreviewElement according to previewLocation and return it.
+const createPreviewElement = (previewLocation, previewHtml, document, elem) => {
+  let previewElement = null;
+
+  if (previewLocation === 'mouse') {
+
+    document.body.insertAdjacentHTML('beforeend', previewHtml);
+
+    const previewElements = document.body.querySelectorAll('.tl-preview');
+    previewElement = previewElements[previewElements.length - 1];
+    previewElement.classList.add('mouse');
+    previewElement.classList.add('popup');
+  } else if (previewLocation === 'top-right') {
+
+    document.body.insertAdjacentHTML('beforeend', previewHtml);
+
+    const previewElements = document.body.querySelectorAll('.tl-preview');
+    previewElement = previewElements[previewElements.length - 1];
+    previewElement.classList.add('top-right');
+    previewElement.classList.add('popup');
+  } else if (previewLocation === 'below-link'){
+
+    elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.insertAdjacentHTML('beforeend', previewHtml);
+
+    previewElement = elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.querySelector('.tl-preview');
+    previewElement.classList.add('below-link');
+  }
+  return previewElement;
+}
+
 // returns { lines, keySentences }
 const fetchPreviewInfo = async (url, terms) => {
   // 7초간 응답이 없으면 abort

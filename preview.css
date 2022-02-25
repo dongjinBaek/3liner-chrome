@@ -9,9 +9,9 @@
 
 .tl-preview.below-link {
   visibility: hidden;
-  height: 0px;
+  max-height: 0px;
   margin-top: 5px;
-  transition: height 0.4s;
+  transition: max-height 0.4s;
   padding-left: 10px;
   padding-top: 5px;
   border-left: 4px solid #ceadf0;
@@ -25,8 +25,8 @@
   z-index: 999999;
 
   visibility: hidden;
-  height: 0px;
-  transition: height 0.4s;
+  max-height: 0px;
+  transition: max-height 0.4s;
   font-family: NanumSquare_R;
 
   border:none;
@@ -46,20 +46,21 @@
 
 .below-link.tl-preview.visible {
   visibility: visible !important;
-  height: 210px !important;
+  max-height: 250px !important;
+  height: auto;
 }
 
 .popup.tl-preview.visible {
   visibility: visible !important;
-  height: 420px !important;
+  max-height: 450px !important;
+  height: auto;
 }
 
-.popup .preview-header {
+.preview-header {
   font-size: 16px;
   font-weight: bold;
   font-family: NanumSquare_B;
   margin-bottom: 5px;
-  overflow:hidden;
 }
 
 .below-link .preview-header {
@@ -85,7 +86,7 @@
 }
 
 .popup .preview-content-wrapper:first-child {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 .preview-content-title {
