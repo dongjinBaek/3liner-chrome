@@ -24,6 +24,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
 
       
       mouseEnterListeners[index] = async (e) => {
+        //cp
         const old = document.getElementById('tl-popup');
         if (old) {
           old.remove();
@@ -36,28 +37,17 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         const popupHtml = await popup.text();
         document.body.insertAdjacentHTML('beforeend', popupHtml);
 
+        //cp
         document.getElementById('tl-popup').addEventListener('mouseenter', () => {
           amplitude.getInstance().logEvent('mouse enter preview', amplitudeEventProperties);
         });
 
-        // const arrow = document.getElementById('tl-arrow-right')
-        //       console.log(arrow);
-        //       arrow.style.backgroundColor = 'black';
-        //       arrow.addEventListener('click', (e) => 
-        //         console.log('1234)')
-        //         // document.getElementById('tl-popup-keyword-sentences').innerHTML = keySentences.slice(startIdx, endIdx).map(sentence => {
-        //         //   for (const term of termList) {
-        //         //     const regexRule = new RegExp(term, 'g');
-        //         //     sentence = sentence.replace(regexRule, `<span style='color:red;'>${term}</span>`);
-        //         //   }
-        //         //   return sentence;
-        //         // }).join('<br/><br/>');
-        //       );
-
         document.getElementById('tl-popup').style.opacity = 1;
 
+        //cp
         document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChangeGenerator(amplitudeEventProperties));
 
+        //cp
         let previewLocation = '';
         if (e.clientY < window.innerHeight / 2) {
           document.getElementById('tl-popup').style.top = `${elem.getBoundingClientRect().bottom + 10}px`;
@@ -72,14 +62,6 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         const popupElement =  document.getElementById('tl-popup');
         const popupContent = document.getElementById('tl-popup-content');
         const titleElement = document.getElementById('tl-popup-title');
-        
-
-        const removePopup = () => {
-          const old = document.getElementById('tl-popup');
-          if (old) {
-            old.remove();
-          }
-        }
 
         let rect = document.getElementById('tl-popup').getBoundingClientRect();
         let isMouseInLinkArea = true;
@@ -144,7 +126,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         }
 
         
-
+        //cp
         addMouseMoveHandler = (rect) => {
           const mouseMoveHandler = async (e) => {
             if (!isMouseInLinkArea && !isMouseHeading(e, rect)) {
@@ -162,6 +144,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
           return () => document.removeEventListener('mousemove', mouseMoveHandler);
         };
 
+        //cp
         const removeMouseMoveHandler = addMouseMoveHandler(rect);
 
         elem.addEventListener('mouseleave', async (e) => {

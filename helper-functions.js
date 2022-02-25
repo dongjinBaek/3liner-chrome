@@ -15,7 +15,7 @@ const loadFonts = (document) => {
 //returns { linkSelector, titleSelector, pageType }
 const getPageInfo = (url) => {
   const linkSelectorDict = {
-    'googleSearch': 'a .LC20lb, a.WlydOe, a.srEl',
+    'googleSearch': '.yuRUbf a, a.WlydOe, a.srEl',
     'naverSearch': 'a.link_tit, a.total_tit, a.news_tit, a.sub_tit, a.lnk_tit, a.link.elss, a.question_text',
     'naverNews': 'a.cjs_news_a, a.cluster_text_headline, a.offc_ct_wraplink, a.article_lst--title_only'
   };
@@ -60,4 +60,27 @@ const onPreviewSwitchChangeGenerator = (amplitudeEventProperties) => {
       }
     });
   }
+}
+
+// returns { lines, keySentences }
+const fetchPreviewInfo = async (url, terms) => {
+  // 7초간 응답이 없으면 abort
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 7000)
+  
+  const threeliner = await fetch(`${BACKEND_PREFIX}/v1/preview?url=${url}&terms=${terms}`, { signal: controller.signal });
+  clearTimeout(timeout);
+  
+  const res = await threeliner.text();
+  const resJson = JSON.parse(res);
+
+  return resJson;
+}
+
+// returns sentence html element in preview content area
+const toSentenceElement = (sentence) => {
+  return `<div class='preview-sentence'>
+            <div class='preview-bullet'>-</div>
+            <div class='preview-content-sentence'>${sentence}</div>
+          </div>`;
 }
