@@ -1,8 +1,11 @@
 amplitude.getInstance().init(AMPLITUDE_KEY);
 
-chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], (result) => {
+chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], async (result) => {
   
   const { linkSelector, titleSelector, pageType, searchQueryParam } = getPageInfo(document.URL);
+
+  const popup = await fetch(chrome.runtime.getURL('/preview.html'));
+  const popupHtml = await popup.text();
 
   let mouseEnterListeners = [];
 
@@ -23,42 +26,26 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], (re
       let previewElement = null;
       if (result.previewLocation === 'mouse') {
 
-        // TODO: 한번만 fetch하고 나머지는 복사해서 사용하기
-        const popup = await fetch(chrome.runtime.getURL('/preview.html'));
-        const popupHtml = await popup.text();
-        // elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.insertAdjacentHTML('beforeend', popupHtml);
         document.body.insertAdjacentHTML('beforeend', popupHtml);
 
         // TODO: abstract getPreviewElement method
-        // const previewElement = elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.querySelector('.tl-preview');
         const previewElements = document.body.querySelectorAll('.tl-preview');
         previewElement = previewElements[previewElements.length - 1];
         previewElement.classList.add('mouse');
         previewElement.classList.add('popup');
       } else if (result.previewLocation === 'top-right') {
-        // TODO: 한번만 fetch하고 나머지는 복사해서 사용하기
-        const popup = await fetch(chrome.runtime.getURL('/preview.html'));
-        const popupHtml = await popup.text();
-        // elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.insertAdjacentHTML('beforeend', popupHtml);
         document.body.insertAdjacentHTML('beforeend', popupHtml);
 
         // TODO: abstract getPreviewElement method
-        // const previewElement = elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.querySelector('.tl-preview');
         const previewElements = document.body.querySelectorAll('.tl-preview');
         previewElement = previewElements[previewElements.length - 1];
         previewElement.classList.add('top-right');
         previewElement.classList.add('popup');
       } else {
-        // TODO: 한번만 fetch하고 나머지는 복사해서 사용하기
-        const popup = await fetch(chrome.runtime.getURL('/preview.html'));
-        const popupHtml = await popup.text();
         elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.insertAdjacentHTML('beforeend', popupHtml);
-        // document.body.insertAdjacentHTML('beforeend', popupHtml);
 
         // TODO: abstract getPreviewElement method
         previewElement = elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.querySelector('.tl-preview');
-        // const previewElements = document.body.querySelectorAll('.tl-preview');
-        // const previewElement = previewElements[previewElements.length - 1];
         previewElement.classList.add('below-link');
       }
 
@@ -121,8 +108,6 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], (re
           previewElement?.classList.remove('visible');
           initPreviewElement(previewElement);
         })
-
-        
 
         elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e')?.addEventListener('mouseleave', async (e) => {
           if (!isMouseInElement(e, previewElement, 5)) {
