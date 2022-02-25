@@ -37,6 +37,8 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         previewElement?.classList.add('visible');
         previewElement.querySelector('.preview-logo').src = chrome.runtime.getURL('logo.png');
 
+        locatePreviewElementNearMouse(previewElement, elem, e, window);
+
         try {
 
           const urlParams = new URLSearchParams(window.location.search);
@@ -45,6 +47,12 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
           
           const { lines, keySentences } = await fetchPreviewInfo(elem.href, terms);
           
+          let title = elem.textContent;
+          if (titleSelector) {
+            title = elem.querySelector(titleSelector).textContent;
+          }
+          previewElement.querySelector('.preview-header').textContent = title;
+
           if (lines) {
             previewElement.querySelector('.preview-content-summary').innerHTML = lines.map(sentence => {
               return toSentenceElement(sentence);
@@ -61,15 +69,24 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
             }).join('');
           } 
         } catch(e) {
-            
+            // TODO: error 처리
+            console.log(e);
         }
       }
 
       if (result.enablePreview) {
         elem.addEventListener('mouseenter', mouseEnterListeners[index]);
 
-        elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e')?.addEventListener('mouseleave', async (e) => {
+        previewElement.addEventListener('mouseleave', () => {
           previewElement?.classList.remove('visible');
+          initPreviewElement(previewElement);
+        })
+
+        elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e')?.addEventListener('mouseleave', async (e) => {
+          if (!isMouseInElement(e, previewElement, 5)) {
+            previewElement?.classList.remove('visible');
+            initPreviewElement(previewElement);
+          }
         });
       }
 

@@ -84,3 +84,40 @@ const toSentenceElement = (sentence) => {
             <div class='preview-content-sentence'>${sentence}</div>
           </div>`;
 }
+
+const locatePreviewElementNearMouse = (previewElement, elem, e, window) => {
+  if (e.clientY < window.innerHeight / 2) {
+    previewElement.style.top = `${elem.getBoundingClientRect().bottom + 10}px`;
+    previewElement.style.left = `${e.clientX + 10}px`;
+    previewElement.style.right = 'auto';
+  } else {
+    previewElement.style.top = `${elem.getBoundingClientRect().top - 15 - 180}px`;
+    previewElement.style.left = `${e.clientX + 10}px`;
+    previewElement.style.right = 'auto';
+  }
+  if (parseInt(previewElement.style.top) + 420 + 10 >= window.innerHeight) {
+    previewElement.style.bottom = '10px';
+    previewElement.style.top = 'auto';
+  }
+  if (parseInt(previewElement.style.top) < 0) {
+    previewElement.style.top = '10px';
+    previewElement.style.bottom = 'auto';
+  }
+}
+
+const initPreviewElement = (previewElement) => {
+  previewElement.querySelector('.preview-header').textContent = '로딩중...';
+  previewElement.querySelector('.preview-content-summary').innerHTML = '';
+  previewElement.querySelector('.preview-content-keyword').innerHTML = '';
+}
+
+const isMouseInElement = (e, element, padding) => {
+  const rect = element.getBoundingClientRect();
+  if (e.clientY < rect.top - padding || e.clientY > rect.bottom + padding) {
+    return false;
+  }
+  if (e.clientX < rect.left - padding || e.clientX > rect.right + padding) {
+    return false;
+  }
+  return true;
+}

@@ -47,7 +47,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
         //cp
         document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChangeGenerator(amplitudeEventProperties));
 
-        //cp
+        
         let previewLocation = '';
         if (e.clientY < window.innerHeight / 2) {
           document.getElementById('tl-popup').style.top = `${elem.getBoundingClientRect().bottom + 10}px`;
