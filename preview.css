@@ -7,7 +7,7 @@
   src: url('/NanumSquareOTF_acR.otf');
 }
 
-.tl-preview.slide {
+.tl-preview.below-link {
   visibility: hidden;
   height: 0px;
   margin-top: 5px;
@@ -39,7 +39,12 @@
   width: 400px;
 }
 
-.slide.tl-preview.visible {
+.tl-preview.top-right {
+  top: 10px;
+  right: 10px;
+}
+
+.below-link.tl-preview.visible {
   visibility: visible !important;
   height: 210px !important;
 }
@@ -57,6 +62,10 @@
   overflow:hidden;
 }
 
+.below-link .preview-header {
+  display: none;
+}
+
 .preview-body {
   display: flex;
   flex-direction: row;
@@ -67,7 +76,7 @@
   flex-direction: column;
 }
 
-.slide .preview-content-wrapper {
+.below-link .preview-content-wrapper {
   width: 282px;
 }
 
@@ -121,6 +130,23 @@
   margin-top: 5px;
   display: flex;
   justify-content: flex-end;
+  font-size:10px;
+  color:#4d5156;
+}
+
+.preview-footer.form-switch {
+  position:relative;
+  bottom:-10px;
+}
+
+.footer-item {
+  border-right: 1px solid black;
+  margin-right: 10px;
+  padding-right: 10px;
+}
+
+.preview-location-select {
+  font-size: 10px;
 }
 
 

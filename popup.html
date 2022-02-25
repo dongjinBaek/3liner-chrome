@@ -2,9 +2,9 @@
 <html>
   <body>
     <!--palette #8679cb #5b80bb #0775e5 #5e49d8 #6b686e-->
-    <div class='tl-preview  popup'>
+    <div class='tl-preview'>
       <div class='preview-header'>로딩중...</div>
-      <div class='preview-body popup'>
+      <div class='preview-body'>
         <div class='preview-content-wrapper'>
           <div class='preview-content-title preview-content-keyword-title'>검색어 포함 문장</div>
           <div class='preview-content preview-content-keyword'>로딩중</div>
@@ -15,6 +15,18 @@
         </div>
       </div>
       <div class='preview-footer'>
+        <!-- <div class='footer-item form-check form-switch'>
+          <span>미리보기</span>
+          <input class='form-check-input preview-switch' type='checkbox' role='switch' checked>
+        </div> -->
+        <div class='footer-item'>
+          <label>미리보기 위치</label>
+          <select class='preview-location-select'>
+              <option value='top-right'>우측 상단</option>
+            <option value='mouse'>마우스 옆</option>
+            <option value='slide'>글 아래</option>
+          </select>
+        </div>
         <img src='' class='preview-logo' height='15' width='30'/>
       </div>
       <!-- <div style='word-break: keep-all; word-wrap:break-word;'>
