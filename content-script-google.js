@@ -5,7 +5,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
   const { linkSelector, titleSelector, pageType, searchQueryParam } = getPageInfo(document.URL);
 
   const popup = await fetch(chrome.runtime.getURL('/preview.html'));
-  const popupHtml = await popup.text();
+  const previewHtml = await popup.text();
 
   let mouseEnterListeners = [];
 
@@ -23,41 +23,19 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
         amplitude.getInstance().logEvent('click link', amplitudeEventProperties);
       });
 
-      let previewElement = null;
-      if (result.previewLocation === 'mouse') {
+      // preview element 생성. 기본적으로 visible: hidden인 상태
+      const previewElement = createPreviewElement(result.previewLocation, previewHtml, document, elem);
 
-        document.body.insertAdjacentHTML('beforeend', popupHtml);
-
-        // TODO: abstract getPreviewElement method
-        const previewElements = document.body.querySelectorAll('.tl-preview');
-        previewElement = previewElements[previewElements.length - 1];
-        previewElement.classList.add('mouse');
-        previewElement.classList.add('popup');
-      } else if (result.previewLocation === 'top-right') {
-        document.body.insertAdjacentHTML('beforeend', popupHtml);
-
-        // TODO: abstract getPreviewElement method
-        const previewElements = document.body.querySelectorAll('.tl-preview');
-        previewElement = previewElements[previewElements.length - 1];
-        previewElement.classList.add('top-right');
-        previewElement.classList.add('popup');
-      } else {
-        elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.insertAdjacentHTML('beforeend', popupHtml);
-
-        // TODO: abstract getPreviewElement method
-        previewElement = elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.querySelector('.tl-preview');
-        previewElement.classList.add('below-link');
-      }
-
+      // 미리보기 위치 지정 selectbox 설정
       previewElement.querySelector('.preview-location-select').value = result.previewLocation;
       previewElement.querySelector('.preview-location-select').addEventListener('change', (e) => {
-        console.log(e.target.value);
         chrome.storage.sync.set({'previewLocation': e.target.value}, () => {
           // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
         });
         alert('새로고침 후 적용됩니다.');
       });
 
+      // 링크 mouse enter eventlisteners. enable preview on/off때 바로 add/remove 할 수 있도록 배열로 관리.
       mouseEnterListeners[index] = async (e) => {
         amplitude.getInstance().logEvent('preview link', amplitudeEventProperties);
 
@@ -68,7 +46,9 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
           locatePreviewElementNearMouse(previewElement, elem, e, window);
         }
 
-        try {
+        const titleElement = previewElement.querySelector('.preview-header');
+
+        try { // preview 정보 backend에서 받아와서 설정하는 try/catch
           const urlParams = new URLSearchParams(window.location.search);
           const terms = urlParams.get(searchQueryParam);
           
@@ -78,7 +58,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
           if (titleSelector) {
             title = elem.querySelector(titleSelector).textContent;
           }
-          previewElement.querySelector('.preview-header').textContent = title;
+          titleElement.textContent = title;
 
           if (lines) {
             previewElement.querySelector('.preview-content-summary').innerHTML = lines.map(sentence => {
@@ -96,9 +76,15 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
             }).join('');
           } 
         } catch(e) {
-            // TODO: error 처리
-            console.log(e);
-        }
+            titleElement.style.display = 'block';
+            if (e.name === 'AbortError') {
+              titleElement.textContent = '시간 내에 요약을 불러오지 못했습니다';
+              amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'timeout' });
+            } else {
+              titleElement.textContent = '내용을 불러오지 못했습니다';
+              amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'error',  errorMessage: e});
+            }
+        } 
       }
 
       if (result.enablePreview) {
