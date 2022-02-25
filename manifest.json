@@ -10,7 +10,13 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://search.naver.com/search.naver*", "https://www.google.com/*", "https://www.google.co.kr/*"],
+      "matches": ["https://www.google.com/*", "https://www.google.co.kr/*"],
+      "css": ["bootstrap-5.1.3.min.css", "preview.css"],
+      "js": ["env.js", "amplitude.js", "helper-functions.js", "content-script-google.js"],
+      "all_frames": true
+    },
+    {
+      "matches": ["https://search.naver.com/search.naver*"],
       "css": ["bootstrap-5.1.3.min.css", "preview.css"],
       "js": ["env.js", "amplitude.js", "helper-functions.js", "content-script.js"],
       "all_frames": true
@@ -28,7 +34,7 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [ "popup.html", "logo.png", "NanumSquareOTF_acB.otf", "NanumSquareOTF_acR.otf"],
+      "resources": [ "popup.html", "preview.html", "logo.png", "NanumSquareOTF_acB.otf", "NanumSquareOTF_acR.otf"],
       "matches": [ "<all_urls>" ]
     }
   ]

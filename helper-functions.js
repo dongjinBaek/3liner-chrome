@@ -15,7 +15,7 @@ const loadFonts = (document) => {
 //returns { linkSelector, titleSelector, pageType }
 const getPageInfo = (url) => {
   const linkSelectorDict = {
-    'googleSearch': '.jtfYYd a, a.WlydOe, a.srEl',
+    'googleSearch': 'a .LC20lb, a.WlydOe, a.srEl',
     'naverSearch': 'a.link_tit, a.total_tit, a.news_tit, a.sub_tit, a.lnk_tit, a.link.elss, a.question_text',
     'naverNews': 'a.cjs_news_a, a.cluster_text_headline, a.offc_ct_wraplink, a.article_lst--title_only'
   };
