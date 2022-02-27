@@ -9,6 +9,11 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
 
   let mouseEnterListeners = [];
 
+  console.log(window.innerHeight, window.innerWidth)
+  // mouse
+  const isMouseHeading = generateIsMouseHeading(window);
+
+  // iterate for links
   document.querySelectorAll(linkSelector).forEach(async (elem, index) => {
       const amplitudeEventProperties = {
         pageType: pageType,
@@ -35,8 +40,32 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
         alert('새로고침 후 적용됩니다.');
       });
 
+        let inlink = true;
+        //cp
+        addMouseMoveHandler = () => {
+          const mouseMoveHandler = async (e) => {
+            if (!inlink && !isMouseHeading(e)) {
+              document.removeEventListener('mousemove', mouseMoveHandler);
+              document.querySelectorAll('.tl-preview').forEach(p => {
+                p.classList.remove('visible');
+                initPreviewElement(p);
+
+              });
+            }
+          };
+
+          document.addEventListener('mousemove', mouseMoveHandler);
+
+          return () => document.removeEventListener('mousemove', mouseMoveHandler);
+        };
+
+        //cp
+       addMouseMoveHandler();
+        
+
       // 링크 mouse enter eventlisteners. enable preview on/off때 바로 add/remove 할 수 있도록 배열로 관리.
       mouseEnterListeners[index] = async (e) => {
+        inlink = true;
         amplitude.getInstance().logEvent('preview link', amplitudeEventProperties);
 
         previewElement?.classList.add('visible');
@@ -47,6 +76,8 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
         }
 
         const titleElement = previewElement.querySelector('.preview-header');
+
+        
 
         try { // preview 정보 backend에서 받아와서 설정하는 try/catch
           const urlParams = new URLSearchParams(window.location.search);
@@ -96,7 +127,9 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
         })
 
         elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e')?.addEventListener('mouseleave', async (e) => {
-          if (!isMouseInElement(e, previewElement, 5)) {
+          console.log('leave')
+          inlink = false;
+          if (!isMouseInElement(e, previewElement, 5) && !isMouseHeading(e, previewElement)) {
             previewElement?.classList.remove('visible');
             initPreviewElement(previewElement);
           }

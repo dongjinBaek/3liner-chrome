@@ -151,3 +151,68 @@ const isMouseInElement = (e, element, padding) => {
   }
   return true;
 }
+
+const generateIsMouseHeading = (window) => {
+  let count = -1, lastX = 0, lastY = 0;
+  let top = 10;
+  let bottom = 10 + 450;
+  let right = window.innerWidth - 10;
+  let left = window.innerWidth - 10 - 400;
+  
+  return isMouseHeading = (e) => {
+    console.log(count, e.clientX, e.clientY, lastX,lastY)
+    count++;
+    // buffer for rectangle
+
+    if (left <= e.clientX && e.clientX <= right
+        && top <= e.clientY && e.clientY <= bottom) {
+          return true;
+    }
+    if (count === 0) {
+      lastX = e.clientX;
+      lastY = e.clientY;
+      return true;
+    }
+    if (count % 5 !== 0) {
+      return true;
+    }
+    const movementX = e.clientX - lastX;
+    const movementY = e.clientY - lastY;
+
+    let sector = 1;
+    if (lastX < left && lastY < bottom) {
+      sector = 2;
+    } else if (lastX < left && lastY >= bottom) {
+      sector = 3;
+    } else if (lastX >= left && lastY >= bottom) {
+      sector = 4;
+    }
+
+    lastX = e.clientX;
+    lastY = e.clientY;
+
+    if (left === e.clientX || right === e.clientX) {
+      return true;
+    }
+
+    const topLeftSlope = (top - e.clientY) / (left - e.clientX);
+    const bottomLeftSlope = (bottom - e.clientY) / (left - e.clientX);
+    const bottomRightSlope = (bottom - e.clientY) / (right - e.clientX);
+    const headingSlope = movementY / movementX;
+
+    console.log(topLeftSlope, bottomLeftSlope, bottomRightSlope, headingSlope);
+
+    if (sector === 2) {
+      return movementX > 0 && 
+        bottomLeftSlope > headingSlope && headingSlope > topLeftSlope;
+    } else if (sector === 4) {
+      return movementX > 0 && movementY < 0 &&
+        (bottomLeftSlope < headingSlope || headingSlope < bottomRightSlope);
+    } else if (sector === 3) {
+      return movementY < 0 && 
+        topLeftSlope < headingSlope && headingSlope < bottomRightSlope;
+    } else {
+      return true;
+    }
+  }
+}
