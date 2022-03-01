@@ -9,10 +9,10 @@ chrome.runtime.onInstalled.addListener(function(details) {
       //TODO: update 끝나면 Install 안으로 옮기기
       chrome.storage.sync.set({'enablePreview': true}, ()=>{});
       chrome.storage.sync.set({'anonymousID': generateAnonymousID()}, ()=>{});
-      chrome.storage.sync.set({'previewLocation': 'top-right'}, ()=>{});
       chrome.storage.sync.set({'previewNumSections': 'show-one'}, ()=>{});
+      chrome.storage.sync.set({'previewSection': 'summary'}, ()=>{});
     }
-    chrome.storage.sync.set({'previewSection': 'summary'}, ()=>{});
+    chrome.storage.sync.set({'previewLocation': 'mouse'}, ()=>{});
 
 });
 

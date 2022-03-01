@@ -30,20 +30,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
 
       // preview element 생성. 기본적으로 visible: hidden인 상태
       const previewElement = createPreviewElement(result.previewLocation, previewHtml, document, elem);
-
-      if (result.previewNumSections === 'show-all') {
-        previewElement.querySelector('.preview-content-multiple-title').classList.add('hide');
-        previewElement.querySelector('.preview-content-summary-title').classList.remove('hide');
-        previewElement.querySelector('.preview-content-keyword-title').classList.remove('hide');
-        previewElement.querySelector('.preview-content-keyword').classList.remove('hide');
-      } else {
-        previewElement.querySelector('.preview-body').classList.add('show-one');
-        if (result.previewSection === 'summary') {
-          changeSection(previewElement, 'keyword', 'summary');
-        } else {
-          changeSection(previewElement, 'summary', 'keyword');
-        }
-      }
+      initPreviewElement(previewElement);
 
       // 내용 전환
       previewElement.querySelector('.content-title-summary').addEventListener('click', () => {
@@ -60,48 +47,28 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
       });
 
       // 미리보기 섹션 개수 지정 selectbox 설정
-      previewElement.querySelector('.preview-num-sections-select').value = result.previewNumSections;
       previewElement.querySelector('.preview-num-sections-select').addEventListener('change', (e) => {
         chrome.storage.sync.set({'previewNumSections': e.target.value}, () => {
           // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
         });
-        alert('새로고침 후 적용됩니다.');
+        result.previewNumSections = e.target.value;
+        setPreviewElementStyle(previewElement, result);
       });
 
       // 미리보기 위치 지정 selectbox 설정
-      previewElement.querySelector('.preview-location-select').value = result.previewLocation;
       previewElement.querySelector('.preview-location-select').addEventListener('change', (e) => {
         chrome.storage.sync.set({'previewLocation': e.target.value}, () => {
           // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
         });
-        alert('새로고침 후 적용됩니다.');
+        result.previewLocation = e.target.value;
+        setPreviewElementLocation(previewElement, result);
       });
 
-        let inlink = true;
-        //cp
-        addMouseMoveHandler = () => {
-          const mouseMoveHandler = async (e) => {
-            if (!inlink && !isMouseHeading(e)) {
-              document.removeEventListener('mousemove', mouseMoveHandler);
-              document.querySelectorAll('.tl-preview').forEach(p => {
-                p.classList.remove('visible');
-                initPreviewElement(p);
-
-              });
-            }
-          };
-
-          document.addEventListener('mousemove', mouseMoveHandler);
-
-          return () => document.removeEventListener('mousemove', mouseMoveHandler);
-        };
-
-        //cp
-       addMouseMoveHandler();
+      const removeMouseMoveHandler = setPreviewElementMouseHandler(previewElement, result, document, elem);
         
-
       // 링크 mouse enter eventlisteners. enable preview on/off때 바로 add/remove 할 수 있도록 배열로 관리.
       mouseEnterListeners[index] = async (e) => {
+
         inlink = true;
         amplitude.getInstance().logEvent('preview link', amplitudeEventProperties);
 
@@ -113,8 +80,10 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         previewElement?.classList.add('visible');
         previewElement.querySelector('.preview-logo').src = chrome.runtime.getURL('logo.png');
 
+        setPreviewElementLocation(previewElement, result);
+        setPreviewElementStyle(previewElement, result);
         if (result.previewLocation === 'mouse') {
-          locatePreviewElementNearMouse(previewElement, elem, e, window);
+          locatePreviewElementNearMouse(previewElement, elem, e, window, result);
         }
 
         const titleElement = previewElement.querySelector('.preview-header');
@@ -167,24 +136,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
           previewElement?.classList.remove('visible');
           initPreviewElement(previewElement);
         });
-
-        if (result.previewLocation === 'below-link') {
-          elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e, ._svp_item, .kin_wrap, .bx')?.addEventListener('mouseleave', async (e) => {
-            console.log('leave')
-            inlink = false;
-            previewElement?.classList.remove('visible');
-            initPreviewElement(previewElement);
-          });
-        } else {
-          elem.addEventListener('mouseleave', async (e) => {
-            console.log('leave')
-            inlink = false;
-            if (!isMouseInElement(e, previewElement, 5) && !isMouseHeading(e, previewElement)) {
-              previewElement?.classList.remove('visible');
-              initPreviewElement(previewElement);
-            }
-          });
-        }
+        
       }
 
   });

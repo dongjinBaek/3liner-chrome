@@ -119,6 +119,104 @@ const changeSection = (previewElement, from, to) => {
   previewElement.querySelector(`.content-title-${to}`).classList.add('selected-title');
 }
 
+
+// set preview element location according to setting
+const setPreviewElementLocation = (previewElement, result) => {
+  const { previewLocation, previewNumSections, previewSection } = result;
+
+  previewElement.classList.remove('mouse');
+  previewElement.classList.remove('top-right');
+  previewElement.classList.remove('below-link');
+  previewElement.classList.remove('popup');
+
+
+  if (previewLocation === 'mouse') {
+    previewElement.classList.add('mouse');
+    previewElement.classList.add('popup');
+  } else if (previewLocation === 'top-right') {
+    previewElement.classList.add('top-right');
+    previewElement.classList.add('popup');
+  } else {
+    previewElement.classList.add('below-link');
+  }
+}
+
+// set preview element style according to settings
+const setPreviewElementStyle = (previewElement, result) => {
+  const { previewLocation, previewNumSections, previewSection } = result;
+
+  if (previewLocation === 'below-link') {
+
+  }
+  previewElement.classList.add('visible');
+
+  if (previewNumSections === 'show-all') {
+    previewElement.querySelector('.preview-content-multiple-title').classList.add('hide');
+    previewElement.querySelector('.preview-content-summary-title').classList.remove('hide');
+    previewElement.querySelector('.preview-content-keyword-title').classList.remove('hide');
+    previewElement.querySelector('.preview-content-keyword').classList.remove('hide');
+  } else {
+    previewElement.querySelector('.preview-content-multiple-title').classList.remove('hide');
+    previewElement.querySelector('.preview-content-summary-title').classList.add('hide');
+    previewElement.querySelector('.preview-content-keyword-title').classList.add('hide');
+
+    previewElement.querySelector('.preview-body').classList.add('show-one');
+    if (previewSection === 'summary') {
+      changeSection(previewElement, 'keyword', 'summary');
+    } else {
+      changeSection(previewElement, 'summary', 'keyword');
+    }
+  }
+
+  // footer selectbox 값 설정
+  previewElement.querySelector('.preview-num-sections-select').value = previewNumSections;
+  previewElement.querySelector('.preview-location-select').value = previewLocation;
+}
+
+// set preview element mouse handler according to settings
+const setPreviewElementMouseHandler = (previewElement, result, document, elem) => {
+  const { previewLocation, previewNumSections, previewSection } = result;
+
+  let inlink = true;
+  
+  if (previewLocation === 'top-left') {
+    const mouseMoveHandler = async (e) => {
+      if (!inlink && !isMouseHeading(e)) {
+        document.removeEventListener('mousemove', mouseMoveHandler);
+        document.querySelectorAll('.tl-preview').forEach(p => {
+          p.classList.remove('visible');
+        });
+      }
+    };
+    document.addEventListener('mousemove', mouseMoveHandler);
+      
+    elem.addEventListener('mouseleave', async (e) => {
+      inlink = false;
+      if (!isMouseInElement(e, previewElement, 5) && !isMouseHeading(e, previewElement)) {
+        previewElement.classList.remove('visible');
+      }
+    });
+
+    return () => document.removeEventListener('mousemove', mouseMoveHandler);
+  } else if (previewLocation === 'mouse') {
+    elem.addEventListener('mouseleave', async (e) => {
+      inlink = false;
+      if (!isMouseInElement(e, previewElement, 10)) {
+        previewElement.classList.remove('visible');
+      }
+    });
+
+    return () => {};
+  } else {
+    elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e, ._svp_item, .kin_wrap, .bx')?.addEventListener('mouseleave', async (e) => {
+      inlink = false;
+      previewElement?.classList.remove('visible');
+    });
+
+    return () => {};
+  }
+}
+
 // returns sentence html element in preview content area
 const toSentenceElement = (sentence) => {
   return `<div class='preview-sentence'>
@@ -127,17 +225,19 @@ const toSentenceElement = (sentence) => {
           </div>`;
 }
 
-const locatePreviewElementNearMouse = (previewElement, elem, e, window) => {
+const locatePreviewElementNearMouse = (previewElement, elem, e, window, result) => {
   if (e.clientY < window.innerHeight / 2) {
     previewElement.style.top = `${elem.getBoundingClientRect().bottom + 10}px`;
     previewElement.style.left = `${e.clientX + 10}px`;
     previewElement.style.right = 'auto';
+    previewElement.style.bottom = 'auto';
   } else {
     previewElement.style.top = `${elem.getBoundingClientRect().top - 15 - 180}px`;
     previewElement.style.left = `${e.clientX + 10}px`;
     previewElement.style.right = 'auto';
+    previewElement.style.bottom = 'auto';
   }
-  if (parseInt(previewElement.style.top) + 420 + 10 >= window.innerHeight) {
+  if (parseInt(previewElement.style.top) + (result.previewLocation === 'below-link'? 220 : 420) + 10 >= window.innerHeight) {
     previewElement.style.bottom = '10px';
     previewElement.style.top = 'auto';
   }

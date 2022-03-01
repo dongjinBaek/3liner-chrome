@@ -1,12 +1,3 @@
-/* @font-face {
-  font-family: NanumSquare_B;
-  src: url('/NanumSquareOTF_acB.otf');
-}
-@font-face {
-  font-family: NanumSquare_R;
-  src: url('/NanumSquareOTF_acR.otf');
-} */
-
 .tl-preview.below-link {
   visibility: hidden;
   max-height: 0px;
@@ -89,8 +80,8 @@
   width: 100%;
 }
 
-.popup .preview-content-wrapper:first-child {
-  margin-bottom: 10px;
+.popup .preview-content-title{
+  margin-top: 10px;
 }
 
 .hide {
