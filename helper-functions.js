@@ -190,6 +190,7 @@ const generateIsMouseHeading = (window) => {
     const movementX = e.clientX - lastX;
     const movementY = e.clientY - lastY;
 
+    
     let sector = 1;
     if (lastX < left && lastY < bottom) {
       sector = 2;
@@ -198,6 +199,7 @@ const generateIsMouseHeading = (window) => {
     } else if (lastX >= left && lastY >= bottom) {
       sector = 4;
     }
+    console.log(sector, movementX, movementY);
 
     lastX = e.clientX;
     lastY = e.clientY;
@@ -215,7 +217,7 @@ const generateIsMouseHeading = (window) => {
 
     if (sector === 2) {
       return movementX > 0 && 
-        bottomLeftSlope > headingSlope && headingSlope > topLeftSlope;
+        bottomRightSlope > headingSlope && headingSlope > topLeftSlope;
     } else if (sector === 4) {
       return movementX > 0 && movementY < 0 &&
         (bottomLeftSlope < headingSlope || headingSlope < bottomRightSlope);

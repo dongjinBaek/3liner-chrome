@@ -9,8 +9,6 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
 
   let mouseEnterListeners = [];
 
-  console.log(window.innerHeight, window.innerWidth);
-
   // mouse
   const isMouseHeading = generateIsMouseHeading(window);
 
@@ -32,7 +30,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
       // preview element 생성. 기본적으로 visible: hidden인 상태
       const previewElement = createPreviewElement(result.previewLocation, previewHtml, document, elem);
 
-      if (result.previewNumSections === 'show-all') {
+      if (result.previewNumSections === 'show-all' || result.previewLocation === 'below-link') {
         previewElement.querySelector('.preview-content-multiple-title').classList.add('hide');
         previewElement.querySelector('.preview-content-summary-title').classList.remove('hide');
         previewElement.querySelector('.preview-content-keyword-title').classList.remove('hide');
@@ -161,16 +159,27 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         previewElement.addEventListener('mouseleave', () => {
           previewElement?.classList.remove('visible');
           initPreviewElement(previewElement);
-        })
-
-        elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e')?.addEventListener('mouseleave', async (e) => {
-          console.log('leave')
-          inlink = false;
-          if (!isMouseInElement(e, previewElement, 5) && !isMouseHeading(e, previewElement)) {
-            previewElement?.classList.remove('visible');
-            initPreviewElement(previewElement);
-          }
         });
+
+        if (result.previewLocation === 'below-link') {
+          elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e')?.addEventListener('mouseleave', async (e) => {
+            console.log('leave')
+            inlink = false;
+            if (!isMouseInElement(e, previewElement, 5) && !isMouseHeading(e, previewElement)) {
+              previewElement?.classList.remove('visible');
+              initPreviewElement(previewElement);
+            }
+          });
+        } else {
+          elem.addEventListener('mouseleave', async (e) => {
+            console.log('leave')
+            inlink = false;
+            if (!isMouseInElement(e, previewElement, 5) && !isMouseHeading(e, previewElement)) {
+              previewElement?.classList.remove('visible');
+              initPreviewElement(previewElement);
+            }
+          });
+        }
       }
 
   });
