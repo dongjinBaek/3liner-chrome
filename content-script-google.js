@@ -31,12 +31,13 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
       // preview element 생성. 기본적으로 visible: hidden인 상태
       const previewElement = createPreviewElement(result.previewLocation, previewHtml, document, elem);
 
-      if (result.previewNumSections === 'show-all' || result.previewLocation === 'below-link') {
+      if (result.previewNumSections === 'show-all') {
         previewElement.querySelector('.preview-content-multiple-title').classList.add('hide');
         previewElement.querySelector('.preview-content-summary-title').classList.remove('hide');
         previewElement.querySelector('.preview-content-keyword-title').classList.remove('hide');
         previewElement.querySelector('.preview-content-keyword').classList.remove('hide');
       } else {
+        previewElement.querySelector('.preview-body').classList.add('show-one');
         if (result.previewSection === 'summary') {
           changeSection(previewElement, 'keyword', 'summary');
         } else {

@@ -70,15 +70,19 @@
 .preview-body {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
 }
 
 .popup .preview-body {
   flex-direction: column;
 }
 
-.below-link .preview-content-wrapper {
+.below-link .preview-content {
   width: 282px;
+}
+
+.below-link .show-one .preview-content {
+  width: 100% !important;
 }
 
 .popup .preview-content-wrapper {
