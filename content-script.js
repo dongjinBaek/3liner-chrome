@@ -2,7 +2,6 @@ amplitude.getInstance().init(AMPLITUDE_KEY);
 loadFonts(document);
 
 chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
-  
 
   const { linkSelector, titleSelector, pageType, searchQueryParam } = getPageInfo(document.URL);
 

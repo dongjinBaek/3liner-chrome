@@ -1,6 +1,6 @@
 amplitude.getInstance().init(AMPLITUDE_KEY);
 
-chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], async (result) => {
+chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'previewNumSections'], async (result) => {
   
   const { linkSelector, titleSelector, pageType, searchQueryParam } = getPageInfo(document.URL);
 
@@ -9,7 +9,8 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
 
   let mouseEnterListeners = [];
 
-  console.log(window.innerHeight, window.innerWidth)
+  console.log(window.innerHeight, window.innerWidth);
+
   // mouse
   const isMouseHeading = generateIsMouseHeading(window);
 
@@ -30,6 +31,42 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation'], asy
 
       // preview element 생성. 기본적으로 visible: hidden인 상태
       const previewElement = createPreviewElement(result.previewLocation, previewHtml, document, elem);
+
+      if (result.previewNumSections === 'show-all') {
+        previewElement.querySelector('.preview-content-multiple-title').classList.add('hide');
+        previewElement.querySelector('.preview-content-summary-title').classList.remove('hide');
+        previewElement.querySelector('.preview-content-keyword-title').classList.remove('hide');
+        previewElement.querySelector('.preview-content-keyword').classList.remove('hide');
+      }
+
+      // 내용 전환
+      previewElement.querySelector('.content-title-summary').addEventListener('click', () => {
+        previewElement.querySelector('.preview-content-keyword').classList.add('hide');
+        previewElement.querySelector('.content-title-keyword').classList.remove('selected-title');
+        previewElement.querySelector('.content-title-keyword').classList.add('unselected-title');
+        
+        previewElement.querySelector('.preview-content-summary').classList.remove('hide');
+        previewElement.querySelector('.content-title-summary').classList.remove('unselected-title');
+        previewElement.querySelector('.content-title-summary').classList.add('selected-title');
+      })
+      previewElement.querySelector('.content-title-keyword').addEventListener('click', () => {
+        previewElement.querySelector('.preview-content-summary').classList.add('hide');
+        previewElement.querySelector('.content-title-summary').classList.remove('selected-title');
+        previewElement.querySelector('.content-title-summary').classList.add('unselected-title');
+        
+        previewElement.querySelector('.preview-content-keyword').classList.remove('hide');
+        previewElement.querySelector('.content-title-keyword').classList.remove('unselected-title');
+        previewElement.querySelector('.content-title-keyword').classList.add('selected-title');
+      });
+
+      // 미리보기 섹션 개수 지정 selectbox 설정
+      previewElement.querySelector('.preview-num-sections-select').value = result.previewNumSections;
+      previewElement.querySelector('.preview-num-sections-select').addEventListener('change', (e) => {
+        chrome.storage.sync.set({'previewNumSections': e.target.value}, () => {
+          // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+        });
+        alert('새로고침 후 적용됩니다.');
+      });
 
       // 미리보기 위치 지정 selectbox 설정
       previewElement.querySelector('.preview-location-select').value = result.previewLocation;

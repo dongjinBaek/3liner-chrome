@@ -5,13 +5,17 @@
     <div class='tl-preview'>
       <div class='preview-header'></div>
       <div class='preview-body slide'>
-        <div class='preview-content-wrapper'>
-          <div class='preview-content-title preview-content-keyword-title'>검색어 포함 문장</div>
-          <div class='preview-content preview-content-keyword'>로딩중</div>
+        <div class='preview-content-title preview-content-multiple-title' style='display:flex; flex-direction:row; justify-content:flex-start;border-bottom: 1px soild black;'>
+          <span class='content-title selected-title content-title-summary'>세줄요약</span>
+          <span class='content-title unselected-title content-title-keyword'>검색어 포함 문장</span>
         </div>
         <div class='preview-content-wrapper'>
-          <div class='preview-content-title preview-content-summary-title'>세줄요약</div>
+          <div class='preview-content-title preview-content-keyword-title hide'>세줄요약</div>
           <div class='preview-content preview-content-summary'>로딩중</div>
+        </div>
+        <div class='preview-content-wrapper'>
+          <div class='preview-content-title preview-content-summary-title hide'>검색어 포함 문장</div>
+          <div class='preview-content preview-content-keyword hide'>로딩중</div>
         </div>
       </div>
       <div class='preview-footer'>
@@ -19,6 +23,13 @@
           <span>미리보기</span>
           <input class='form-check-input preview-switch' type='checkbox' role='switch' checked>
         </div> -->
+        <div class='footer-item'>
+          <label>요약 보기</label>
+          <select class='preview-num-sections-select'>
+            <option value='show-one'>한개씩 보기</option>
+            <option value='show-all'>펼쳐 보기</option>
+          </select>
+        </div>
         <div class='footer-item'>
           <label>미리보기 위치</label>
           <select class='preview-location-select'>

@@ -89,6 +89,28 @@
   margin-bottom: 10px;
 }
 
+.hide {
+  display: none !important;
+}
+
+.content-title {
+  margin-left: 10px;
+}
+
+.content-title:first-child {
+  margin-left: 0px !important;
+}
+
+.selected-title {
+  color: black;
+  border-bottom: 2px solid #4d5156;
+}
+
+.unselected-title {
+  color: #BBBBBB;
+  cursor: pointer;
+}
+
 .preview-content-title {
   padding-left: 10px;
   font-size: 14px;
