@@ -84,9 +84,10 @@ const createPreviewElement = (previewLocation, previewHtml, document, elem) => {
     previewElement.classList.add('popup');
   } else if (previewLocation === 'below-link'){
 
-    elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.insertAdjacentHTML('beforeend', previewHtml);
+    elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe, ._svp_item, .kin_wrap, .bx')?.insertAdjacentHTML('beforeend', previewHtml);
 
-    previewElement = elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe')?.querySelector('.tl-preview');
+    const previewElements = elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .WlydOe, ._svp_item, .kin_wrap, .bx').querySelectorAll('.tl-preview');
+    previewElement = previewElements[previewElements.length - 1];
     previewElement.classList.add('below-link');
   }
   return previewElement;

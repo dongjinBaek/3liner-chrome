@@ -1,4 +1,5 @@
 amplitude.getInstance().init(AMPLITUDE_KEY);
+loadFonts(document);
 
 chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'previewNumSections', 'previewSection'], async (result) => {
   
@@ -103,6 +104,11 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         inlink = true;
         amplitude.getInstance().logEvent('preview link', amplitudeEventProperties);
 
+        document.body.querySelectorAll('.tl-preview').forEach((prev) => {
+          prev?.classList.remove('visible');
+          initPreviewElement(prev);
+        })
+
         previewElement?.classList.add('visible');
         previewElement.querySelector('.preview-logo').src = chrome.runtime.getURL('logo.png');
 
@@ -162,13 +168,11 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         });
 
         if (result.previewLocation === 'below-link') {
-          elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e')?.addEventListener('mouseleave', async (e) => {
+          elem.closest('.hlcw0c, .jtfYYd, .tF2Cxc, .vJOb1e, ._svp_item, .kin_wrap, .bx')?.addEventListener('mouseleave', async (e) => {
             console.log('leave')
             inlink = false;
-            if (!isMouseInElement(e, previewElement, 5) && !isMouseHeading(e, previewElement)) {
-              previewElement?.classList.remove('visible');
-              initPreviewElement(previewElement);
-            }
+            previewElement?.classList.remove('visible');
+            initPreviewElement(previewElement);
           });
         } else {
           elem.addEventListener('mouseleave', async (e) => {

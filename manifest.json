@@ -18,7 +18,7 @@
     {
       "matches": ["https://search.naver.com/search.naver*"],
       "css": ["bootstrap-5.1.3.min.css", "preview.css"],
-      "js": ["env.js", "amplitude.js", "helper-functions.js", "content-script.js"],
+      "js": ["env.js", "amplitude.js", "helper-functions.js", "content-script-google.js"],
       "all_frames": true
     }
   ],

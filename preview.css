@@ -1,17 +1,17 @@
-@font-face {
+/* @font-face {
   font-family: NanumSquare_B;
   src: url('/NanumSquareOTF_acB.otf');
 }
 @font-face {
   font-family: NanumSquare_R;
   src: url('/NanumSquareOTF_acR.otf');
-}
+} */
 
 .tl-preview.below-link {
   visibility: hidden;
   max-height: 0px;
   margin-top: 5px;
-  transition: max-height 0.4s;
+  transition: max-height 0.6s;
   padding-left: 10px;
   padding-top: 5px;
   border-left: 4px solid #ceadf0;
@@ -26,7 +26,7 @@
 
   visibility: hidden;
   max-height: 0px;
-  transition: max-height 0.4s;
+  transition: max-height 0.6s;
   font-family: NanumSquare_R;
 
   border:none;
@@ -166,13 +166,12 @@
   border-right: 1px solid black;
   margin-right: 10px;
   padding-right: 10px;
-}
-
-.preview-location-select {
   font-size: 10px;
 }
 
-
+.preview-select {
+  font-size: 10px;
+}
 
 
 
