@@ -1,6 +1,6 @@
 amplitude.getInstance().init(AMPLITUDE_KEY);
 
-chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'previewNumSections'], async (result) => {
+chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'previewNumSections', 'previewSection'], async (result) => {
   
   const { linkSelector, titleSelector, pageType, searchQueryParam } = getPageInfo(document.URL);
 
@@ -37,26 +37,26 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         previewElement.querySelector('.preview-content-summary-title').classList.remove('hide');
         previewElement.querySelector('.preview-content-keyword-title').classList.remove('hide');
         previewElement.querySelector('.preview-content-keyword').classList.remove('hide');
+      } else {
+        if (result.previewSection === 'summary') {
+          changeSection(previewElement, 'keyword', 'summary');
+        } else {
+          changeSection(previewElement, 'summary', 'keyword');
+        }
       }
 
       // 내용 전환
       previewElement.querySelector('.content-title-summary').addEventListener('click', () => {
-        previewElement.querySelector('.preview-content-keyword').classList.add('hide');
-        previewElement.querySelector('.content-title-keyword').classList.remove('selected-title');
-        previewElement.querySelector('.content-title-keyword').classList.add('unselected-title');
-        
-        previewElement.querySelector('.preview-content-summary').classList.remove('hide');
-        previewElement.querySelector('.content-title-summary').classList.remove('unselected-title');
-        previewElement.querySelector('.content-title-summary').classList.add('selected-title');
+        changeSection(previewElement, 'keyword', 'summary');
+        chrome.storage.sync.set({'previewSection': 'summary'}, () => {
+          // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+        });
       })
       previewElement.querySelector('.content-title-keyword').addEventListener('click', () => {
-        previewElement.querySelector('.preview-content-summary').classList.add('hide');
-        previewElement.querySelector('.content-title-summary').classList.remove('selected-title');
-        previewElement.querySelector('.content-title-summary').classList.add('unselected-title');
-        
-        previewElement.querySelector('.preview-content-keyword').classList.remove('hide');
-        previewElement.querySelector('.content-title-keyword').classList.remove('unselected-title');
-        previewElement.querySelector('.content-title-keyword').classList.add('selected-title');
+        changeSection(previewElement, 'summary', 'keyword');
+        chrome.storage.sync.set({'previewSection': 'keyword'}, () => {
+          // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+        });
       });
 
       // 미리보기 섹션 개수 지정 selectbox 설정

@@ -107,6 +107,17 @@ const fetchPreviewInfo = async (url, terms) => {
   return resJson;
 }
 
+//
+const changeSection = (previewElement, from, to) => {
+  previewElement.querySelector(`.preview-content-${from}`).classList.add('hide');
+  previewElement.querySelector(`.content-title-${from}`).classList.remove('selected-title');
+  previewElement.querySelector(`.content-title-${from}`).classList.add('unselected-title');
+  
+  previewElement.querySelector(`.preview-content-${to}`).classList.remove('hide');
+  previewElement.querySelector(`.content-title-${to}`).classList.remove('unselected-title');
+  previewElement.querySelector(`.content-title-${to}`).classList.add('selected-title');
+}
+
 // returns sentence html element in preview content area
 const toSentenceElement = (sentence) => {
   return `<div class='preview-sentence'>
