@@ -22,6 +22,9 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         searchQueryParam: searchQueryParam,
         version: VERSION,
         anonymousID: result.anonymousID,
+        previewLocation: result.previewLocation,
+        previewNumSections: result.previewNumSections,
+        previewSection: result.previewSection,
       };
 
       elem.addEventListener('click', () => {
@@ -36,32 +39,37 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
       previewElement.querySelector('.content-title-summary').addEventListener('click', () => {
         changeSection(previewElement, 'keyword', 'summary');
         chrome.storage.sync.set({'previewSection': 'summary'}, () => {
-          // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+          amplitude.getInstance().logEvent('change preview section', {...amplitudeEventProperties, value: 'summary'});
         });
-      })
+        result.previewSection = 'summary';
+      });
       previewElement.querySelector('.content-title-keyword').addEventListener('click', () => {
         changeSection(previewElement, 'summary', 'keyword');
         chrome.storage.sync.set({'previewSection': 'keyword'}, () => {
-          // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+          amplitude.getInstance().logEvent('change preview section', {...amplitudeEventProperties, value: 'keyword'});
         });
+        result.previewSection = 'keyword';
       });
 
       // 미리보기 섹션 개수 지정 selectbox 설정
       previewElement.querySelector('.preview-num-sections-select').addEventListener('change', (e) => {
         chrome.storage.sync.set({'previewNumSections': e.target.value}, () => {
-          // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+          amplitude.getInstance().logEvent('change num section', {...amplitudeEventProperties, value: e.target.value});
         });
         result.previewNumSections = e.target.value;
         setPreviewElementStyle(previewElement, result);
+        previewElement.classList.add('visible');
       });
 
       // 미리보기 위치 지정 selectbox 설정
       previewElement.querySelector('.preview-location-select').addEventListener('change', (e) => {
         chrome.storage.sync.set({'previewLocation': e.target.value}, () => {
-          // amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+          amplitude.getInstance().logEvent('change preview location', {...amplitudeEventProperties, value: e.target.value});
         });
         result.previewLocation = e.target.value;
-        setPreviewElementLocation(previewElement, result);
+        alert('새로고침 후 적용됩니다.');
+        // setPreviewElementLocation(previewElement, result);
+        // setPreviewElementMouseHandler(previewElement, result, document, elem);
       });
 
       const removeMouseMoveHandler = setPreviewElementMouseHandler(previewElement, result, document, elem);
@@ -88,7 +96,6 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
 
         const titleElement = previewElement.querySelector('.preview-header');
 
-        
 
         try { // preview 정보 backend에서 받아와서 설정하는 try/catch
           const urlParams = new URLSearchParams(window.location.search);

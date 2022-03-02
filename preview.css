@@ -72,6 +72,14 @@
   width: 282px;
 }
 
+.below-link .preview-content-wrapper:first-child {
+  margin-right: 10px;
+}
+
+.below-link .show-one .preview-content-wrapper:first-child {
+  margin-right: 0 !important;
+}
+
 .below-link .show-one .preview-content {
   width: 100% !important;
 }
