@@ -98,6 +98,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         document.body.querySelectorAll('.tl-preview').forEach((prev) => {
           prev?.classList.remove('visible');
           initPreviewElement(prev);
+          amplitude.getInstance().logEvent('remove preview link', {...amplitudeEventProperties, 'removedBy': 'new preview'});
         })
 
         previewElement?.classList.add('visible');
@@ -138,7 +139,8 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
               }
               return toSentenceElement(sentence);
             }).join('');
-          } 
+          }
+          amplitude.getInstance().logEvent('preview load', { ...amplitudeEventProperties, summary: lines, keyword: keySentences });
         } catch(e) {
             titleElement.style.display = 'block';
             if (e.name === 'AbortError') {
@@ -157,6 +159,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         previewElement.addEventListener('mouseleave', () => {
           previewElement?.classList.remove('visible');
           initPreviewElement(previewElement);
+          amplitude.getInstance().logEvent('remove preview link', {...amplitudeEventProperties, 'removedBy': 'mouse out'});
         });
         
       }
