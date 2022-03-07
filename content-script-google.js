@@ -72,6 +72,21 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         // setPreviewElementMouseHandler(previewElement, result, document, elem);
       });
 
+      // 미리보기 enablePreview switch
+      previewElement.querySelector('.preview-switch').checked = result.enablePreview;
+      
+      onPreviewSwitchChange = (e) => {
+        chrome.storage.sync.set({'enablePreview': e.target.checked}, () => {
+          amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+        });
+        if (e.target.checked) {
+          alert('우측 상단 3L 확장 프로그램 아이콘을 눌러 다시 활성화 할 수 있습니다.');
+        }
+      }
+      
+      previewElement.querySelector('.preview-switch').addEventListener('change', onPreviewSwitchChange);
+      
+      
       const removeMouseMoveHandler = setPreviewElementMouseHandler(previewElement, result, document, elem);
         
       // 링크 mouse enter eventlisteners. enable preview on/off때 바로 add/remove 할 수 있도록 배열로 관리.
@@ -146,6 +161,22 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         
       }
 
+  });
+
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'sync' && changes.enablePreview) {
+      if (changes.enablePreview.newValue === false) {
+        document.querySelectorAll(linkSelector).forEach((elem, index) => {
+          elem.removeEventListener('mouseenter', mouseEnterListeners[index]);
+        });
+        document.querySelectorAll('.preview-switch').forEach((elem => elem.checked = false));
+      } else if (changes.enablePreview.newValue === true) {
+        document.querySelectorAll(linkSelector).forEach((elem, index) => {
+          elem.addEventListener('mouseenter', mouseEnterListeners[index]);
+        });
+        document.querySelectorAll('.preview-switch').forEach((elem => elem.checked = true));
+      }
+    }
   });
 
 });
