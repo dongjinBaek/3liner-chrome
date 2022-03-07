@@ -10,6 +10,9 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
 
   let mouseEnterListeners = [];
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const terms = urlParams.get(searchQueryParam);
+
   // mouse
   const isMouseHeading = generateIsMouseHeading(window);
 
@@ -19,7 +22,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         pageType: pageType,
         source: window.location.href,
         destination: elem.href,
-        searchQueryParam: searchQueryParam,
+        searchQueryParam: terms,
         version: VERSION,
         anonymousID: result.anonymousID,
         previewLocation: result.previewLocation,
@@ -96,9 +99,11 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         amplitude.getInstance().logEvent('preview link', amplitudeEventProperties);
 
         document.body.querySelectorAll('.tl-preview').forEach((prev) => {
-          prev?.classList.remove('visible');
-          initPreviewElement(prev);
-          amplitude.getInstance().logEvent('remove preview link', {...amplitudeEventProperties, 'removedBy': 'new preview'});
+          if (prev.classList.contains('visible')) {
+            prev?.classList.remove('visible');
+            initPreviewElement(prev);
+            amplitude.getInstance().logEvent('remove preview link', {...amplitudeEventProperties, 'removedBy': 'new preview'});
+          }
         })
 
         previewElement?.classList.add('visible');
@@ -114,8 +119,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
 
 
         try { // preview 정보 backend에서 받아와서 설정하는 try/catch
-          const urlParams = new URLSearchParams(window.location.search);
-          const terms = urlParams.get(searchQueryParam);
+          
           
           const { lines, keySentences } = await fetchPreviewInfo(elem.href, terms);
           
