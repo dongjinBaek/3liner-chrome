@@ -66,7 +66,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         chrome.storage.sync.set({'previewLocation': e.target.value}, () => {
           amplitude.getInstance().logEvent('change preview location', {...amplitudeEventProperties, value: e.target.value});
         });
-        result.previewLocation = e.target.value;
+        // result.previewLocation = e.target.value;
         alert('새로고침 후 적용됩니다.');
         // setPreviewElementLocation(previewElement, result);
         // setPreviewElementMouseHandler(previewElement, result, document, elem);
@@ -79,7 +79,7 @@ chrome.storage.sync.get(['enablePreview', 'anonymousID', 'previewLocation', 'pre
         chrome.storage.sync.set({'enablePreview': e.target.checked}, () => {
           amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
         });
-        if (e.target.checked) {
+        if (!e.target.checked) {
           alert('우측 상단 3L 확장 프로그램 아이콘을 눌러 다시 활성화 할 수 있습니다.');
         }
       }
