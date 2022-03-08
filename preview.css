@@ -43,7 +43,7 @@
 
 .popup.tl-preview.visible {
   visibility: visible !important;
-  max-height: 450px !important;
+  max-height: 470px !important;
   height: auto;
 }
 

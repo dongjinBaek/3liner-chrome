@@ -243,7 +243,7 @@ const locatePreviewElementNearMouse = (previewElement, elem, e, window, result) 
     previewElement.style.right = 'auto';
     previewElement.style.bottom = 'auto';
   }
-  if (parseInt(previewElement.style.top) + (result.previewNumSections === 'show-one'? 220 : 420) + 10 >= window.innerHeight) {
+  if (parseInt(previewElement.style.top) + (result.previewNumSections === 'show-one'? 220 : 440) + 10 >= window.innerHeight) {
     previewElement.style.bottom = '10px';
     previewElement.style.top = 'auto';
   }
