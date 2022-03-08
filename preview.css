@@ -166,7 +166,7 @@
 }
 
 .footer-item {
-  border-right: 1px solid black;
+  /* border-right: 1px solid black; */
   margin-right: 10px;
   padding-right: 10px;
   font-size: 10px;
