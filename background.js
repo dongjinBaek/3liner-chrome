@@ -6,12 +6,14 @@ chrome.runtime.onInstalled.addListener(function(details) {
           chrome.runtime.setUninstallURL(uninstallUrlLink);
       }
 
-      //TODO: update 끝나면 Install 안으로 옮기기
-      // chrome.storage.sync.set({'enablePreview': true}, ()=>{});
-      // chrome.storage.sync.set({'anonymousID': generateAnonymousID()}, ()=>{});
-      // chrome.storage.sync.set({'previewLocation': 'below-link'}, ()=>{});
-      // chrome.storage.sync.set({'previewNumSections': 'show-one'}, ()=>{});
-      // chrome.storage.sync.set({'previewSection': 'summary'}, ()=>{});
+      chrome.storage.sync.set({'enablePreview': false}, ()=>{});
+      chrome.storage.sync.set({'anonymousID': generateAnonymousID()}, ()=>{});
+      chrome.storage.sync.set({'previewLocation': 'below-link'}, ()=>{});
+      chrome.storage.sync.set({'previewNumSections': 'show-one'}, ()=>{});
+      chrome.storage.sync.set({'previewSection': 'summary'}, ()=>{});
+
+      chrome.tabs.create({ url: `https://quaint-nurse-0a4.notion.site/3-Liner-cec53681714047719ee8f2674e4d4538` });
+      
     }
 });
 

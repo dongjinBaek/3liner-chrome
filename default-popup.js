@@ -61,14 +61,14 @@ window.onload = async () => {
       });
 
       // TODO: 더 잘 나누기. 닫는 태그도 textParts에 포함하게 하기.
-      const textParts = response.content.split(/(<\/(p|div|h1|h2|h3|h4|h5|h6)>)|(<br\/?>)/gi);
+      const textParts = response.content.split(/(<\/(p|div|h1|h2|h3|h4|h5|h6|li)>)|(<br\/?>)/gi);
 
       textParts.forEach(part => {
         if (!part) {
           return;
         }
         part = part.replace(/(\n|\t|\r)/gi, '');
-        if (part.length === 0 || part.match((/^\/?(p|div|h1|h2|h3|h4|h5|h6)$/gi))) {
+        if (part.length === 0 || part.match((/^\/?(p|div|h1|h2|h3|h4|h5|h6|li)$/gi))) {
           return;
         }
 

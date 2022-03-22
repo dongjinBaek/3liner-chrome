@@ -1,7 +1,7 @@
 {
-  "name": "3Liner - 마우스만 올려도 볼 수 있는 세줄요약",
-  "description": "마우스만 올려도 볼 수 있는 세줄요약",
-  "version": "0.2.1",
+  "name": "3Liner - 원클릭으로 확인하는 세줄요약",
+  "description": "원클릭으로 확인하는 세줄요약",
+  "version": "0.3.0",
   "manifest_version": 3,
   "icons": {
     "16": "logo128.png",
