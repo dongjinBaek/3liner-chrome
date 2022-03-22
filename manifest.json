@@ -10,6 +10,22 @@
   },
   "content_scripts": [
     {
+      "matches": ["<all_urls>"],
+      "js": ["Readability.js", "content-script.js"]
+    },
+    {
+      "matches": ["https://www.facebook.com/sharer/sharer.php*"],
+      "js": ["share-facebook.js"]
+    },
+    {
+      "matches": ["https://www.linkedin.com/sharing/share-offsite/*"],
+      "js": ["share-linkedin.js"]
+    },
+    {
+      "matches": ["https://careerly.co.kr/posts/create*"],
+      "js": ["share-careerly.js"]
+    },
+    {
       "matches": ["https://www.google.com/*", "https://www.google.co.kr/*"],
       "css": ["bootstrap-5.1.3.min.css", "preview.css"],
       "js": ["env.js", "amplitude.js", "helper-functions.js", "content-script-google.js"],

@@ -1,85 +1,58 @@
-amplitude.getInstance().init(AMPLITUDE_KEY);
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  chrome.storage.sync.get(['enablePreview', 'anonymousID'], (result) => {
-    const amplitudeEventProperties = {
-      pageType: 'popup',
-      version: VERSION,
-      anonymousID: result.anonymousID,
-    }
-
-    document.getElementById('tl-summarize-btn').addEventListener('click', summarizeTextGenerator(amplitudeEventProperties));
-    amplitude.getInstance().logEvent('open popup', amplitudeEventProperties);
-
-    document.getElementById('tl-feedback-btn').addEventListener('click', () => {
-      amplitude.getInstance().logEvent('feedback', amplitudeEventProperties);
-      chrome.tabs.create({ url: 'https://forms.gle/VCmjUZD8n75KJPaQ6' });
-    });
-
-    document.getElementById('tl-popup-preview-switch').checked = result.enablePreview;
-    document.getElementById('tl-popup-preview-switch').addEventListener('change', onPreviewSwitchChangeGenerator(amplitudeEventProperties));
-  });
-});
-
-const summarizeTextGenerator = (amplitudeEventProperties) => {
-  return summarizeText = async () => {
-    const textArea = document.getElementById('tl-textarea');
-    if (textArea.value.indexOf(' ') === -1) {
-      alert('두 단어 이상 입력해주세요');
-      return;
-    } else if (textArea.value.length > 3000) {
-      alert('3000자 이하로 입력해주세요')
-      return;
-    }
-    
-    const summarizeBtn = document.getElementById('tl-summarize-btn');
-    
-    try {
-      amplitude.getInstance().logEvent('summarize text', {...amplitudeEventProperties, data: textArea.value});
-      const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 5000)
-      
-      const content = textArea.value;
-      
-      summarizeBtn.textContent = '요약중';
-      summarizeBtn.disabled = true;
-      
-      const threeliner = await fetch(`${BACKEND_PREFIX}/v1/summary?content=${content}`, { signal: controller.signal });
-      clearTimeout(timeout);
-      
-      const res = await threeliner.text();
-      const resJson = JSON.parse(res);
-      lines = resJson.lines;
-      
-      if (lines.length === 0) {
-        textArea.value = '요약을 불러오지 못했습니다';
-        amplitude.getInstance().logEvent('error', {...amplitudeEventProperties, errorType: 'empty result'});
-      } else {
-        textArea.value = lines.map(line => '- ' + line).join('\n\n');
-        amplitude.getInstance().logEvent('summarize text loaded', {...amplitudeEventProperties, lines: lines});
-      }
-    } catch (e) {
-      if (e.name === 'AbortError') {
-        textArea.value = '시간 내에 요약을 불러오지 못했습니다';
-        amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'timeout' });
-      } else {
-        textArea.value = '내용을 불러오지 못했습니다';
-        amplitude.getInstance().logEvent('error', { ...amplitudeEventProperties, errorType: 'error',  errorMessage: e});
-      }
-      
-    }
-    
-    summarizeBtn.textContent = '요약하기';
-    summarizeBtn.disabled = false;
-  }
+async function getCurrentTab() {
+  let queryOptions = { active: true, currentWindow: true };
+  let [tab] = await chrome.tabs.query(queryOptions);
+  return tab;
 }
-  
-  const onPreviewSwitchChangeGenerator = (amplitudeEventProperties) => {
-    return onPreviewSwitchChange = (e) => {
-      chrome.storage.sync.set({'enablePreview': e.target.checked}, () => {
-        amplitude.getInstance().logEvent('toggle enable preview', {...amplitudeEventProperties, checked: e.target.checked});
+
+let lines = 3;
+let content = '';
+let sentences = [];
+
+window.onload = async () => {
+  const summary = (lines) => {
+    const contentElement = document.getElementById('content');
+    contentElement.textContent = '로딩중...';
+    const textRank = new TextRank(sentences, {
+        summaryType: 'array',
+        extractAmount: lines,
       });
-    }
+    contentElement.innerHTML = textRank.summarizedArticle.map((s, idx) => {
+      return `<div class='summary-item'><div class='summary-item-index'>${idx+1}.</div><div>${s}</div></div>`
+    }).join('<br/>');
+
+
+    const url = document.getElementById('document-url').textContent;
+    let shareContent = textRank.summarizedArticle.map((s, idx) => 
+      `${idx + 1}. ${s}`
+    ).join('3l-new-line');
+    document.getElementById('share-facebook').href = `https://www.facebook.com/sharer/sharer.php?u=${url}&redirect_uri=https://www.facebook.com&3liner-summary=${shareContent}`;
+    // document.getElementById('share-linkedin').href = `https://www.linkedin.com/sharing/share-offsite/?url=${url}?3liner-summary=${shareContent}`;
+    document.getElementById('share-careerly').href = `https://careerly.co.kr/posts/create?3liner-summary=${shareContent}&3liner-url=${url}`;
   }
+
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, {type: "info"}, function(response) {
+      const contentElement = document.getElementById('content');
+      document.getElementById('document-title').textContent = response.title;
+      document.getElementById('document-url').textContent = response.url;
+
+      // TODO: 더 잘 나누기. 닫는 태그도 textParts에 포함하게 하기.
+      const textParts = response.content.split(/(<\/(p|div|h1|h2|h3|h4|h5|h6)>)|(<br\/?>)/gi);
+
+      textParts.forEach(part => {
+        if (!part) {
+          return;
+        }
+        part = part.replace(/(\n|\t|\r)/gi, '');
+        if (part.length === 0 || part.match((/^\/?(p|div|h1|h2|h3|h4|h5|h6)$/gi))) {
+          return;
+        }
+
+        contentElement.innerHTML = part;
+        sentences.push(...contentElement.textContent.split(/[!?.] /gi).filter(s => s.length > 0));
+      });
+
+      summary(3);
+    });
+  });
+}
