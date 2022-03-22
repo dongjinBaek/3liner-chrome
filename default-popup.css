@@ -57,6 +57,10 @@ body {
   align-items: end;
 }
 
+#footer-left img {
+  cursor: pointer;
+}
+
 #footer-right {
   display: flex;
   flex-direction: row;
@@ -67,6 +71,8 @@ body {
 #feedback-link {
   color: #888;
   font-size: 12px;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 #logo {
